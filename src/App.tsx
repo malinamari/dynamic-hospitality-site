@@ -17,6 +17,15 @@ import FAQ from "./pages/FAQ";
 import Quiz from "./pages/Quiz";
 import CityPage from "./pages/CityPage";
 import NotFound from "./pages/NotFound";
+import ARRURRULogin from "./pages/arrurru/ARRURRULogin";
+import ARRURRURegister from "./pages/arrurru/ARRURRURegister";
+import ARRURRURequestInvite from "./pages/arrurru/ARRURRURequestInvite";
+import ARRURRUDashboard from "./pages/arrurru/ARRURRUDashboard";
+import ARRURRUCodeice from "./pages/arrurru/ARRURRUCodeice";
+import ARRURRUTrainingHall from "./pages/arrurru/ARRURRUTrainingHall";
+import ARRURRUTrainings from "./pages/arrurru/ARRURRUTrainings";
+import ARRURRUStandards from "./pages/arrurru/ARRURRUStandards";
+import ARRURRUAdmin from "./pages/arrurru/ARRURRUAdmin";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +48,15 @@ const App = () => (
               <Route path="/faq" element={<FAQ />} />
               <Route path="/quiz" element={<Quiz />} />
               <Route path="/city/:citySlug" element={<CityPage />} />
+              <Route path="/arrurru/login" element={<ARRURRULogin />} />
+              <Route path="/arrurru/register" element={<ARRURRURegister />} />
+              <Route path="/arrurru/request-invite" element={<ARRURRURequestInvite />} />
+              <Route path="/arrurru/dashboard" element={<ARRURRUDashboard />} />
+              <Route path="/arrurru/codice" element={<ARRURRUCodeice />} />
+              <Route path="/arrurru/training-hall" element={<ARRURRUTrainingHall />} />
+              <Route path="/arrurru/trainings" element={<ARRURRUTrainings />} />
+              <Route path="/arrurru/standards" element={<ARRURRUStandards />} />
+              <Route path="/arrurru/admin" element={<ARRURRUAdmin />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
