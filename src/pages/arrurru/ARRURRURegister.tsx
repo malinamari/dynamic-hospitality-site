@@ -13,8 +13,10 @@ const ARRURRURegister = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
+  const [projectName, setProjectName] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   useEffect(() => {
     const tokenParam = searchParams.get('token');
@@ -28,6 +30,12 @@ const ARRURRURegister = () => {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    if (!agreedToTerms) {
+      setError('Необходимо согласие на обработку данных');
+      return;
+    }
+
     setLoading(true);
 
     if (password.length < 6) {
@@ -36,7 +44,7 @@ const ARRURRURegister = () => {
       return;
     }
 
-    const result = await register(token, email, password, fullName);
+    const result = await register(token, email, password, fullName, projectName || 'ARRURRU');
 
     if (result.success) {
       navigate('/arrurru/dashboard');
@@ -55,7 +63,8 @@ const ARRURRURegister = () => {
             <Icon name="UserPlus" size={48} className="text-amber-400" />
           </div>
           <h1 className="text-4xl font-black text-white">Регистрация</h1>
-          <p className="text-xl text-amber-400">ARRURRU Личный кабинет</p>
+          <p className="text-xl text-amber-400">Платформа для развития бизнеса</p>
+          <p className="text-sm text-slate-300">Создайте аккаунт для доступа к вашему проекту</p>
         </div>
 
         <Card className="bg-slate-800/50 backdrop-blur-sm border-2 border-amber-500/30">
@@ -98,6 +107,31 @@ const ARRURRURegister = () => {
                 />
               </div>
 
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-white">Название проекта (опционально)</label>
+                <Input
+                  type="text"
+                  value={projectName}
+                  onChange={(e) => setProjectName(e.target.value)}
+                  placeholder="ARRURRU"
+                  className="bg-slate-900/50 border-slate-700 text-white"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="flex items-start gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={agreedToTerms}
+                    onChange={(e) => setAgreedToTerms(e.target.checked)}
+                    className="mt-1 w-4 h-4 rounded border-slate-700 bg-slate-900/50 text-amber-500 focus:ring-amber-500"
+                  />
+                  <span className="text-xs text-slate-300">
+                    Я согласен на обработку персональных данных и принимаю условия использования платформы
+                  </span>
+                </label>
+              </div>
+
               {error && (
                 <div className="p-3 bg-red-500/20 border border-red-500/50 rounded-lg">
                   <p className="text-sm text-red-300">{error}</p>
@@ -106,10 +140,10 @@ const ARRURRURegister = () => {
 
               <Button
                 type="submit"
-                disabled={loading || !token}
-                className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold"
+                disabled={loading || !token || !agreedToTerms}
+                className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? 'Регистрация...' : 'Зарегистрироваться'}
+                {loading ? 'Регистрация...' : 'Создать аккаунт'}
               </Button>
             </form>
 

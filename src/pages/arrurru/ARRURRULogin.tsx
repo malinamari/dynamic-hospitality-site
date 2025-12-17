@@ -12,10 +12,17 @@ const ARRURRULogin = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    if (!agreedToTerms) {
+      setError('Необходимо согласие на обработку данных');
+      return;
+    }
+
     setLoading(true);
 
     const result = await login(email, password);
@@ -34,11 +41,13 @@ const ARRURRULogin = () => {
       <div className="w-full max-w-md space-y-8">
         <div className="text-center space-y-4">
           <div className="inline-block p-4 bg-amber-500/20 backdrop-blur-sm rounded-full border-2 border-amber-500">
-            <Icon name="Lock" size={48} className="text-amber-400" />
+            <Icon name="Shield" size={48} className="text-amber-400" />
           </div>
-          <h1 className="text-4xl font-black text-white">ARRURRU</h1>
-          <p className="text-xl text-amber-400">Личный кабинет</p>
-          <p className="text-slate-300">Доступ только по приглашению</p>
+          <h1 className="text-4xl font-black text-white">Закрытая зона</h1>
+          <p className="text-xl text-amber-400">Платформа для развития бизнеса</p>
+          <p className="text-slate-300 max-w-md mx-auto">
+            Добро пожаловать в образовательную платформу. После авторизации вы получите доступ к материалам вашего проекта.
+          </p>
         </div>
 
         <Card className="bg-slate-800/50 backdrop-blur-sm border-2 border-amber-500/30">
@@ -68,6 +77,20 @@ const ARRURRULogin = () => {
                 />
               </div>
 
+              <div className="space-y-2">
+                <label className="flex items-start gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={agreedToTerms}
+                    onChange={(e) => setAgreedToTerms(e.target.checked)}
+                    className="mt-1 w-4 h-4 rounded border-slate-700 bg-slate-900/50 text-amber-500 focus:ring-amber-500"
+                  />
+                  <span className="text-xs text-slate-300">
+                    Я согласен на обработку персональных данных и принимаю условия использования платформы
+                  </span>
+                </label>
+              </div>
+
               {error && (
                 <div className="p-3 bg-red-500/20 border border-red-500/50 rounded-lg">
                   <p className="text-sm text-red-300">{error}</p>
@@ -76,10 +99,10 @@ const ARRURRULogin = () => {
 
               <Button
                 type="submit"
-                disabled={loading}
-                className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold"
+                disabled={loading || !agreedToTerms}
+                className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? 'Вход...' : 'Войти'}
+                {loading ? 'Вход...' : 'Войти в систему'}
               </Button>
             </form>
 

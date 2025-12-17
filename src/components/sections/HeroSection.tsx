@@ -68,7 +68,7 @@ const HeroSection = ({ scrollToSection }: HeroSectionProps) => {
               className="w-full sm:w-auto text-base px-8 py-6 font-semibold shadow-xl hover:scale-105 transition-transform bg-gradient-to-r from-purple-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white border-2 border-white/50" 
               onClick={() => navigate('/arrurru/login')}
             >
-              🎓 Личный кабинет ARRURRU
+              🔐 Закрытая зона
             </Button>
           </div>
         </div>

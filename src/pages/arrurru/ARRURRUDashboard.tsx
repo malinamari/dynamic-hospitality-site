@@ -63,12 +63,21 @@ const ARRURRUDashboard = () => {
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate('/')}
+                className="text-slate-400 hover:text-white hover:bg-slate-800"
+              >
+                <Icon name="ArrowLeft" size={20} className="mr-2" />
+                На главную
+              </Button>
               <div className="p-2 bg-amber-500/20 rounded-lg border border-amber-500/50">
-                <Icon name="Crown" size={24} className="text-amber-400" />
+                <Icon name="Building2" size={24} className="text-amber-400" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-white">ARRURRU</h1>
-                <p className="text-sm text-slate-400">Личный кабинет</p>
+                <h1 className="text-xl font-bold text-white">{user.projectName || 'ARRURRU'}</h1>
+                <p className="text-sm text-slate-400">{user.role === 'super_admin' ? 'Генеральный доступ' : 'Профиль проекта'}</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
@@ -96,6 +105,11 @@ const ARRURRUDashboard = () => {
               Добро пожаловать, {user.fullName.split(' ')[0]}!
             </h2>
             <p className="text-xl text-amber-400">
+              {user.role === 'super_admin' 
+                ? 'Генеральный доступ ко всем проектам'
+                : `Профиль проекта: ${user.projectName || 'ARRURRU'}`}
+            </p>
+            <p className="text-slate-300">
               Выберите раздел для работы
             </p>
           </div>
@@ -136,18 +150,24 @@ const ARRURRUDashboard = () => {
             ))}
           </div>
 
-          {user.role === 'manager' && (
+          {(user.role === 'manager' || user.role === 'super_admin') && (
             <div className="mt-12">
               <Card className="bg-slate-800/50 backdrop-blur-sm border-2 border-amber-500/30">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                       <div className="p-3 bg-amber-500/20 rounded-lg border border-amber-500/50">
-                        <Icon name="Settings" size={24} className="text-amber-400" />
+                        <Icon name={user.role === 'super_admin' ? 'Crown' : 'Settings'} size={24} className="text-amber-400" />
                       </div>
                       <div>
-                        <h3 className="text-lg font-bold text-white">Панель управления</h3>
-                        <p className="text-sm text-slate-400">Редактирование контента и создание приглашений</p>
+                        <h3 className="text-lg font-bold text-white">
+                          {user.role === 'super_admin' ? 'Генеральная панель' : 'Панель управления'}
+                        </h3>
+                        <p className="text-sm text-slate-400">
+                          {user.role === 'super_admin' 
+                            ? 'Полный доступ: просмотр всех профилей, редактирование контента, управление пользователями'
+                            : 'Редактирование контента и создание приглашений'}
+                        </p>
                       </div>
                     </div>
                     <Button

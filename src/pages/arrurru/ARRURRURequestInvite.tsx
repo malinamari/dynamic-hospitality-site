@@ -9,8 +9,8 @@ const ARRURRURequestInvite = () => {
   const [sent, setSent] = useState(false);
 
   const handleRequest = () => {
-    const subject = 'Запрос доступа к ARRURRU Личный кабинет';
-    const body = 'Здравствуйте! Прошу предоставить доступ к закрытому кабинету ARRURRU.';
+    const subject = 'Запрос доступа к образовательной платформе';
+    const body = 'Здравствуйте! Прошу предоставить доступ к образовательной платформе для развития бизнеса.';
     window.location.href = `mailto:malinochkamarina@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     setSent(true);
   };
@@ -22,8 +22,8 @@ const ARRURRURequestInvite = () => {
           <div className="inline-block p-4 bg-amber-500/20 backdrop-blur-sm rounded-full border-2 border-amber-500">
             <Icon name="Mail" size={48} className="text-amber-400" />
           </div>
-          <h1 className="text-4xl font-black text-white">Запрос приглашения</h1>
-          <p className="text-xl text-amber-400">ARRURRU Личный кабинет</p>
+          <h1 className="text-4xl font-black text-white">Запрос доступа</h1>
+          <p className="text-xl text-amber-400">Платформа для развития бизнеса</p>
         </div>
 
         <Card className="bg-slate-800/50 backdrop-blur-sm border-2 border-amber-500/30">
@@ -35,8 +35,7 @@ const ARRURRURequestInvite = () => {
                   Доступ только по приглашению
                 </h2>
                 <p className="text-slate-300">
-                  Для получения доступа к закрытому кабинету ARRURRU свяжитесь с администратором.
-                  Мы отправим вам персональную ссылку-приглашение на email.
+                  Это закрытая платформа для обучения и развития бизнеса. Для получения доступа свяжитесь с администратором. Мы отправим вам персональную ссылку для регистрации.
                 </p>
               </div>
 
