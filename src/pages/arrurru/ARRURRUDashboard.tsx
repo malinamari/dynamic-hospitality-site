@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
 import { getCurrentUser, logout } from '@/lib/arrurru-auth';
-import { getUserProgress, getContentBySection } from '@/lib/arrurru-content';
+import { getUserProgress, getContentBySection, loadContent } from '@/lib/arrurru-content';
 import { useState } from 'react';
 import ProgressBadge from '@/components/ProgressBadge';
 
@@ -51,7 +51,9 @@ const ARRURRUDashboard = () => {
   useEffect(() => {
     if (!user) {
       navigate('/arrurru/login');
+      return;
     }
+    loadContent();
   }, [user, navigate]);
 
   const handleLogout = () => {

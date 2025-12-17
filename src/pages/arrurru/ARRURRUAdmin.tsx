@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import Icon from '@/components/ui/icon';
 import { getCurrentUser, logout, createInvitation, User } from '@/lib/arrurru-auth';
 import { loadContent, saveContent, deleteContent, ContentPage, getUserProgress, getExamResults } from '@/lib/arrurru-content';
+import { getAllUsers } from '@/lib/arrurru-users';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import FileUploader from '@/components/FileUploader';
 import ProgressChart from '@/components/ProgressChart';
@@ -84,8 +85,8 @@ const ARRURRUAdmin = () => {
   }, [user, navigate]);
 
   const loadAllUsers = () => {
-    const users = JSON.parse(localStorage.getItem('arrurru_users') || '[]');
-    setAllUsers(users);
+    const users = getAllUsers();
+    setAllUsers(users as any);
   };
 
   const handleDeleteUser = (userId: string) => {

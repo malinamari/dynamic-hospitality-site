@@ -21,7 +21,11 @@ const ARRURRULogin = () => {
     const result = await login(email, password);
 
     if (result.success) {
-      navigate('/arrurru/dashboard');
+      if (result.needsProjectSelect) {
+        navigate('/arrurru/project-select');
+      } else {
+        navigate('/arrurru/dashboard');
+      }
     } else {
       setError(result.error || 'Ошибка входа');
     }

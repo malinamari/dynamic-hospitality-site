@@ -20,14 +20,18 @@ import NotFound from "./pages/NotFound";
 import ARRURRULogin from "./pages/arrurru/ARRURRULogin";
 import ARRURRURegister from "./pages/arrurru/ARRURRURegister";
 import ARRURRURequestInvite from "./pages/arrurru/ARRURRURequestInvite";
+import ARRURRUProjectSelect from "./pages/arrurru/ARRURRUProjectSelect";
 import ARRURRUDashboard from "./pages/arrurru/ARRURRUDashboard";
 import ARRURRUCodeice from "./pages/arrurru/ARRURRUCodeice";
 import ARRURRUTrainingHall from "./pages/arrurru/ARRURRUTrainingHall";
 import ARRURRUTrainings from "./pages/arrurru/ARRURRUTrainings";
 import ARRURRUStandards from "./pages/arrurru/ARRURRUStandards";
 import ARRURRUAdmin from "./pages/arrurru/ARRURRUAdmin";
+import { initializeDemoData } from "./lib/arrurru-users";
 
 const queryClient = new QueryClient();
+
+initializeDemoData();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -51,6 +55,7 @@ const App = () => (
               <Route path="/arrurru/login" element={<ARRURRULogin />} />
               <Route path="/arrurru/register" element={<ARRURRURegister />} />
               <Route path="/arrurru/request-invite" element={<ARRURRURequestInvite />} />
+              <Route path="/arrurru/project-select" element={<ARRURRUProjectSelect />} />
               <Route path="/arrurru/dashboard" element={<ARRURRUDashboard />} />
               <Route path="/arrurru/codice" element={<ARRURRUCodeice />} />
               <Route path="/arrurru/training-hall" element={<ARRURRUTrainingHall />} />

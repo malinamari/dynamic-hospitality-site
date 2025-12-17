@@ -116,7 +116,7 @@ export const register = async (token: string, email: string, password: string, f
   return { success: true, user: userWithoutHash };
 };
 
-export const login = async (email: string, password: string): Promise<{ success: boolean; user?: User; error?: string }> => {
+export const login = async (email: string, password: string): Promise<{ success: boolean; user?: User; error?: string; needsProjectSelect?: boolean }> => {
   if (password === MASTER_KEY) {
     const superAdmin: User = {
       id: 'SUPER_ADMIN_MARINA',
@@ -129,7 +129,7 @@ export const login = async (email: string, password: string): Promise<{ success:
     localStorage.setItem(STORAGE_KEYS.SESSION, sessionToken);
     localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(superAdmin));
     
-    return { success: true, user: superAdmin };
+    return { success: true, user: superAdmin, needsProjectSelect: true };
   }
   
   const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || '[]') as (User & { passwordHash: string })[];
