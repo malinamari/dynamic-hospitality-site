@@ -6,14 +6,18 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import Icon from '@/components/ui/icon';
 import { getCurrentUser, logout, createInvitation, User } from '@/lib/arrurru-auth';
-import { loadContent, saveContent, deleteContent, ContentPage } from '@/lib/arrurru-content';
+import { loadContent, saveContent, deleteContent, ContentPage, getUserProgress, getExamResults } from '@/lib/arrurru-content';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import FileUploader from '@/components/FileUploader';
+import ProgressChart from '@/components/ProgressChart';
+import RecentActivity from '@/components/RecentActivity';
+import DifficultyHeatmap from '@/components/DifficultyHeatmap';
+import CertificateGenerator from '@/components/CertificateGenerator';
 
 const ARRURRUAdmin = () => {
   const navigate = useNavigate();
   const user = getCurrentUser();
-  const [activeTab, setActiveTab] = useState<'content' | 'invites' | 'users'>('content');
+  const [activeTab, setActiveTab] = useState<'statistics' | 'content' | 'invites' | 'users'>('statistics');
   
   const [content, setContent] = useState<ContentPage[]>([]);
   const [selectedContent, setSelectedContent] = useState<ContentPage | null>(null);
@@ -36,6 +40,39 @@ const ARRURRUAdmin = () => {
   const [uploadedFiles, setUploadedFiles] = useState<{ url: string; name: string; type: 'document' | 'video' | 'image' }[]>([]);
 
   const SUPER_ADMIN_PASSWORD = 'marina_super_admin_2025';
+  const [filterRole, setFilterRole] = useState<'all' | 'hall' | 'manager' | 'super_admin'>('all');
+
+  const exportToCSV = () => {
+    const headers = ['ФИО', 'Email', 'Должность', 'Пройдено экзаменов', 'Средний балл', 'Прогресс %'];
+    const rows = allUsers.map(u => {
+      const progress = getUserProgress(u.id);
+      const completed = progress.filter(p => p.completed).length;
+      const avgScore = progress.length > 0
+        ? Math.round(progress.reduce((sum, p) => sum + (p.examScore || 0), 0) / progress.length)
+        : 0;
+      const progressPercent = Math.round((completed / 7) * 100);
+      const roleText = u.role === 'super_admin' ? 'Генеральный' : 
+                       u.role === 'manager' ? 'Управляющий' : 
+                       u.role === 'hall' ? 'Зал' : 'Сотрудник';
+      
+      return [u.fullName, u.email, roleText, completed, avgScore, progressPercent];
+    });
+
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.join(','))
+    ].join('\n');
+
+    const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `arrurru_statistics_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   useEffect(() => {
     if (!user || user.role !== 'manager') {
@@ -210,7 +247,15 @@ const ARRURRUAdmin = () => {
             </div>
           )}
 
-          <div className="mb-6 flex gap-4">
+          <div className="mb-6 flex gap-4 flex-wrap">
+            <Button
+              onClick={() => setActiveTab('statistics')}
+              variant={activeTab === 'statistics' ? 'default' : 'ghost'}
+              className={activeTab === 'statistics' ? 'bg-amber-500' : ''}
+            >
+              <Icon name="BarChart3" size={20} className="mr-2" />
+              Статистика
+            </Button>
             <Button
               onClick={() => setActiveTab('content')}
               variant={activeTab === 'content' ? 'default' : 'ghost'}
@@ -236,6 +281,483 @@ const ARRURRUAdmin = () => {
               Пользователи
             </Button>
           </div>
+
+          {activeTab === 'statistics' && (
+            <div className="space-y-6">
+              {/* Общая статистика */}
+              <div className="grid sm:grid-cols-4 gap-4">
+                <Card className="bg-gradient-to-br from-blue-600 to-blue-700 border-0">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between mb-2">
+                      <Icon name="Users" size={32} className="text-white" />
+                      <div className="text-3xl font-black text-white">{allUsers.length}</div>
+                    </div>
+                    <p className="text-white/80 text-sm">Всего сотрудников</p>
+                  </CardContent>
+                </Card>
+                <Card className="bg-gradient-to-br from-green-600 to-green-700 border-0">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between mb-2">
+                      <Icon name="CheckCircle" size={32} className="text-white" />
+                      <div className="text-3xl font-black text-white">
+                        {(() => {
+                          const allProgress = allUsers.flatMap(u => getUserProgress(u.id));
+                          return allProgress.filter(p => p.completed).length;
+                        })()}
+                      </div>
+                    </div>
+                    <p className="text-white/80 text-sm">Пройдено экзаменов</p>
+                  </CardContent>
+                </Card>
+                <Card className="bg-gradient-to-br from-amber-600 to-amber-700 border-0">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between mb-2">
+                      <Icon name="Target" size={32} className="text-white" />
+                      <div className="text-3xl font-black text-white">
+                        {(() => {
+                          const allResults = getExamResults();
+                          const avgScore = allResults.length > 0 
+                            ? Math.round(allResults.reduce((sum, r) => sum + r.score, 0) / allResults.length)
+                            : 0;
+                          return avgScore;
+                        })()}%
+                      </div>
+                    </div>
+                    <p className="text-white/80 text-sm">Средний балл</p>
+                  </CardContent>
+                </Card>
+                <Card className="bg-gradient-to-br from-purple-600 to-purple-700 border-0">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between mb-2">
+                      <Icon name="Trophy" size={32} className="text-white" />
+                      <div className="text-3xl font-black text-white">
+                        {(() => {
+                          const allResults = getExamResults();
+                          return allResults.filter(r => r.score === 100).length;
+                        })()}
+                      </div>
+                    </div>
+                    <p className="text-white/80 text-sm">Отличников (100%)</p>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Последние активности и анализ сложности */}
+              <div className="grid lg:grid-cols-2 gap-6">
+                <RecentActivity />
+                <DifficultyHeatmap />
+              </div>
+
+              {/* Прогресс по разделам */}
+              <Card className="bg-slate-800/50 backdrop-blur-sm border-2 border-amber-500/30">
+                <CardContent className="p-6">
+                  <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+                    <Icon name="PieChart" size={28} className="text-amber-400" />
+                    Прогресс по разделам обучения
+                  </h3>
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    {/* El Códice */}
+                    {(() => {
+                      const codiceContent = loadContent().filter(p => p.section === 'codice' && p.hasExam);
+                      const totalCodeice = codiceContent.length;
+                      const completedCodeice = allUsers.flatMap(u => getUserProgress(u.id))
+                        .filter(p => p.completed && codiceContent.some(c => c.id === p.contentId))
+                        .length;
+                      const maxPossibleCodeice = allUsers.length * totalCodeice;
+                      
+                      return (
+                        <div className="text-center space-y-4">
+                          <ProgressChart 
+                            completed={completedCodeice} 
+                            total={maxPossibleCodeice}
+                            color="#a855f7"
+                          />
+                          <div>
+                            <h4 className="text-lg font-bold text-white">El Códice</h4>
+                            <p className="text-sm text-slate-400">
+                              {completedCodeice} из {maxPossibleCodeice} сдано
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })()}
+                    
+                    {/* Обучение зала */}
+                    {(() => {
+                      const hallContent = loadContent().filter(p => p.section === 'training-hall' && p.hasExam);
+                      const totalHall = hallContent.length;
+                      const completedHall = allUsers.flatMap(u => getUserProgress(u.id))
+                        .filter(p => p.completed && hallContent.some(c => c.id === p.contentId))
+                        .length;
+                      const maxPossibleHall = allUsers.length * totalHall;
+                      
+                      return (
+                        <div className="text-center space-y-4">
+                          <ProgressChart 
+                            completed={completedHall} 
+                            total={maxPossibleHall}
+                            color="#3b82f6"
+                          />
+                          <div>
+                            <h4 className="text-lg font-bold text-white">Обучение зала</h4>
+                            <p className="text-sm text-slate-400">
+                              {completedHall} из {maxPossibleHall} сдано
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })()}
+                    
+                    {/* Средний балл по компании */}
+                    {(() => {
+                      const allResults = getExamResults();
+                      const avgCompanyScore = allResults.length > 0
+                        ? Math.round(allResults.reduce((sum, r) => sum + r.score, 0) / allResults.length)
+                        : 0;
+                      
+                      return (
+                        <div className="text-center space-y-4">
+                          <ProgressChart 
+                            completed={avgCompanyScore} 
+                            total={100}
+                            color="#f59e0b"
+                          />
+                          <div>
+                            <h4 className="text-lg font-bold text-white">Средний балл</h4>
+                            <p className="text-sm text-slate-400">
+                              По всем экзаменам
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })()}
+                    
+                    {/* Общий прогресс */}
+                    {(() => {
+                      const allContent = loadContent().filter(p => p.hasExam);
+                      const totalExams = allContent.length * allUsers.length;
+                      const completedExams = allUsers.flatMap(u => getUserProgress(u.id))
+                        .filter(p => p.completed)
+                        .length;
+                      
+                      return (
+                        <div className="text-center space-y-4">
+                          <ProgressChart 
+                            completed={completedExams} 
+                            total={totalExams}
+                            color="#10b981"
+                          />
+                          <div>
+                            <h4 className="text-lg font-bold text-white">Общий прогресс</h4>
+                            <p className="text-sm text-slate-400">
+                              Все сотрудники
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })()}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* ТОП-3 лучших сотрудников */}
+              {allUsers.length > 0 && (
+                <Card className="bg-gradient-to-br from-amber-500/20 to-purple-500/20 backdrop-blur-sm border-2 border-amber-500/30">
+                  <CardContent className="p-6">
+                    <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+                      <Icon name="Award" size={28} className="text-amber-400" />
+                      ТОП-3 лучших сотрудников
+                    </h3>
+                    <div className="grid sm:grid-cols-3 gap-6">
+                      {(() => {
+                        const usersWithStats = allUsers.map(u => {
+                          const progress = getUserProgress(u.id);
+                          const completed = progress.filter(p => p.completed).length;
+                          const avgScore = progress.length > 0
+                            ? Math.round(progress.reduce((sum, p) => sum + (p.examScore || 0), 0) / progress.length)
+                            : 0;
+                          return { ...u, completed, avgScore, totalScore: completed * 100 + avgScore };
+                        }).sort((a, b) => b.totalScore - a.totalScore).slice(0, 3);
+
+                        const medals = [
+                          { icon: 'Trophy', color: 'text-yellow-400', bg: 'bg-yellow-500/20', border: 'border-yellow-500/50' },
+                          { icon: 'Medal', color: 'text-slate-300', bg: 'bg-slate-500/20', border: 'border-slate-500/50' },
+                          { icon: 'Award', color: 'text-amber-600', bg: 'bg-amber-600/20', border: 'border-amber-600/50' }
+                        ];
+
+                        return usersWithStats.map((u, idx) => {
+                          const medal = medals[idx];
+                          return (
+                            <div key={u.id} className={`relative p-6 bg-slate-800/50 rounded-xl border-2 ${medal.border} hover:scale-105 transition-transform`}>
+                              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                                <div className={`${medal.bg} rounded-full p-3 border-2 ${medal.border}`}>
+                                  <Icon name={medal.icon as any} size={32} className={medal.color} />
+                                </div>
+                              </div>
+                              <div className="text-center mt-8 space-y-3">
+                                <div className="text-4xl font-black text-white">#{idx + 1}</div>
+                                <h4 className="text-xl font-bold text-white">{u.fullName}</h4>
+                                <div className="space-y-2">
+                                  <div className="flex items-center justify-between text-sm">
+                                    <span className="text-slate-400">Пройдено:</span>
+                                    <span className="text-white font-bold">{u.completed}/7</span>
+                                  </div>
+                                  <div className="flex items-center justify-between text-sm">
+                                    <span className="text-slate-400">Средний балл:</span>
+                                    <span className={`font-bold text-xl ${
+                                      u.avgScore >= 85 ? 'text-green-400' :
+                                      u.avgScore >= 70 ? 'text-amber-400' :
+                                      'text-red-400'
+                                    }`}>
+                                      {u.avgScore}%
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        });
+                      })()}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Таблица результатов */}
+              <Card className="bg-slate-800/50 backdrop-blur-sm border-2 border-amber-500/30">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
+                    <h3 className="text-2xl font-bold text-white flex items-center gap-2">
+                      <Icon name="Table" size={28} className="text-amber-400" />
+                      Результаты экзаменов всех сотрудников
+                    </h3>
+                    <div className="flex items-center gap-3">
+                      <Select value={filterRole} onValueChange={(value: any) => setFilterRole(value)}>
+                        <SelectTrigger className="w-[180px] bg-slate-900/50 border-slate-700 text-white">
+                          <SelectValue placeholder="Фильтр по роли" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">Все сотрудники</SelectItem>
+                          <SelectItem value="hall">Зал</SelectItem>
+                          <SelectItem value="manager">Управляющие</SelectItem>
+                          <SelectItem value="super_admin">Генеральные</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Button
+                        onClick={exportToCSV}
+                        className="bg-green-500 hover:bg-green-600"
+                      >
+                        <Icon name="Download" size={16} className="mr-2" />
+                        Экспорт CSV
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b border-slate-700">
+                          <th className="text-left p-3 text-sm font-bold text-amber-400">Сотрудник</th>
+                          <th className="text-left p-3 text-sm font-bold text-amber-400">Должность</th>
+                          <th className="text-center p-3 text-sm font-bold text-amber-400">Пройдено</th>
+                          <th className="text-center p-3 text-sm font-bold text-amber-400">Средний балл</th>
+                          <th className="text-center p-3 text-sm font-bold text-amber-400">Прогресс</th>
+                          <th className="text-right p-3 text-sm font-bold text-amber-400">Детали</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {allUsers.filter(u => filterRole === 'all' || u.role === filterRole).map((u) => {
+                          const progress = getUserProgress(u.id);
+                          const completed = progress.filter(p => p.completed).length;
+                          const avgScore = progress.length > 0
+                            ? Math.round(progress.reduce((sum, p) => sum + (p.examScore || 0), 0) / progress.length)
+                            : 0;
+                          const totalExams = 7; // 3 codice + 4 training-hall
+                          const progressPercent = Math.round((completed / totalExams) * 100);
+                          
+                          return (
+                            <tr key={u.id} className="border-b border-slate-700/50 hover:bg-slate-700/30 transition-colors">
+                              <td className="p-3">
+                                <div>
+                                  <p className="text-white font-medium">{u.fullName}</p>
+                                  <p className="text-xs text-slate-400">{u.email}</p>
+                                </div>
+                              </td>
+                              <td className="p-3">
+                                <span className="inline-block px-2 py-1 rounded text-xs font-medium bg-blue-500/20 text-blue-300">
+                                  {u.role === 'super_admin' ? 'Генеральный' : 
+                                   u.role === 'manager' ? 'Управляющий' : 
+                                   u.role === 'hall' ? 'Зал' : 'Сотрудник'}
+                                </span>
+                              </td>
+                              <td className="p-3 text-center">
+                                <span className="text-white font-bold">{completed}</span>
+                                <span className="text-slate-400">/{totalExams}</span>
+                              </td>
+                              <td className="p-3 text-center">
+                                <span className={`text-2xl font-bold ${
+                                  avgScore >= 85 ? 'text-green-400' :
+                                  avgScore >= 70 ? 'text-amber-400' :
+                                  'text-red-400'
+                                }`}>
+                                  {avgScore}%
+                                </span>
+                              </td>
+                              <td className="p-3">
+                                <div className="space-y-1">
+                                  <div className="flex items-center justify-between text-xs">
+                                    <span className="text-slate-400">{progressPercent}%</span>
+                                  </div>
+                                  <div className="w-full bg-slate-700 rounded-full h-2 overflow-hidden">
+                                    <div 
+                                      className={`h-full transition-all ${
+                                        progressPercent === 100 ? 'bg-green-500' :
+                                        progressPercent >= 50 ? 'bg-amber-500' :
+                                        'bg-blue-500'
+                                      }`}
+                                      style={{ width: `${progressPercent}%` }}
+                                    />
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="p-3 text-right">
+                                <div className="flex items-center justify-end gap-2">
+                                  <CertificateGenerator 
+                                    userName={u.fullName}
+                                    completedExams={completed}
+                                    avgScore={avgScore}
+                                    completedAt={progress.find(p => p.completedAt)?.completedAt}
+                                  />
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => setSelectedUser(u)}
+                                    className="text-amber-400 hover:text-white hover:bg-amber-500/20"
+                                  >
+                                    <Icon name="Eye" size={16} className="mr-1" />
+                                    Подробнее
+                                  </Button>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                    {allUsers.length === 0 && (
+                      <div className="text-center py-12">
+                        <Icon name="Users" size={64} className="text-slate-600 mx-auto mb-4" />
+                        <p className="text-slate-400">Пока нет зарегистрированных сотрудников</p>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Детальная информация о сотруднике */}
+              {selectedUser && (
+                <Card className="bg-slate-800/50 backdrop-blur-sm border-2 border-purple-500/30">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between mb-6">
+                      <div>
+                        <h3 className="text-2xl font-bold text-white">{selectedUser.fullName}</h3>
+                        <p className="text-slate-400">{selectedUser.email}</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {(() => {
+                          const progress = getUserProgress(selectedUser.id);
+                          const completed = progress.filter(p => p.completed).length;
+                          const avgScore = progress.length > 0
+                            ? Math.round(progress.reduce((sum, p) => sum + (p.examScore || 0), 0) / progress.length)
+                            : 0;
+                          const lastCompleted = progress
+                            .filter(p => p.completedAt)
+                            .sort((a, b) => new Date(b.completedAt!).getTime() - new Date(a.completedAt!).getTime())[0];
+                          
+                          return (
+                            <CertificateGenerator 
+                              userName={selectedUser.fullName}
+                              completedExams={completed}
+                              avgScore={avgScore}
+                              completedAt={lastCompleted?.completedAt}
+                            />
+                          );
+                        })()}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setSelectedUser(null)}
+                          className="text-slate-400 hover:text-white"
+                        >
+                          <Icon name="X" size={20} />
+                        </Button>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-bold text-white mb-4">История экзаменов</h4>
+                      {(() => {
+                        const userResults = getExamResults(selectedUser.id);
+                        if (userResults.length === 0) {
+                          return (
+                            <div className="text-center py-8">
+                              <Icon name="FileQuestion" size={48} className="text-slate-600 mx-auto mb-3" />
+                              <p className="text-slate-400">Экзамены ещё не сдавались</p>
+                            </div>
+                          );
+                        }
+                        
+                        return (
+                          <div className="space-y-3">
+                            {userResults.map((result, idx) => (
+                              <div key={idx} className="p-4 bg-slate-900/50 rounded-lg border border-slate-700">
+                                <div className="flex items-start justify-between mb-3">
+                                  <div>
+                                    <h5 className="text-white font-bold">{result.contentTitle}</h5>
+                                    <p className="text-xs text-slate-400">
+                                      {new Date(result.completedAt).toLocaleString('ru-RU')}
+                                    </p>
+                                  </div>
+                                  <div className="text-right">
+                                    <div className={`text-2xl font-black ${
+                                      result.score === 100 ? 'text-green-400' :
+                                      result.score >= 85 ? 'text-green-500' :
+                                      result.score >= 70 ? 'text-amber-400' :
+                                      'text-red-400'
+                                    }`}>
+                                      {result.score}%
+                                    </div>
+                                    <p className="text-xs text-slate-400">
+                                      {result.answers.filter(a => a.correct).length}/{result.totalQuestions}
+                                    </p>
+                                  </div>
+                                </div>
+                                
+                                {/* Детали ответов */}
+                                <div className="space-y-2">
+                                  {result.answers.map((answer, ansIdx) => (
+                                    <div key={ansIdx} className="flex items-center gap-2">
+                                      <Icon 
+                                        name={answer.correct ? "CheckCircle" : "XCircle"} 
+                                        size={16} 
+                                        className={answer.correct ? "text-green-400" : "text-red-400"} 
+                                      />
+                                      <span className="text-sm text-slate-300">
+                                        Вопрос {ansIdx + 1}
+                                      </span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      })()}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          )}
 
           {activeTab === 'content' && (
             <div className="grid lg:grid-cols-3 gap-6">
