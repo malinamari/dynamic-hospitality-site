@@ -8,6 +8,7 @@ import Icon from '@/components/ui/icon';
 import { getCurrentUser, logout, createInvitation, User } from '@/lib/arrurru-auth';
 import { loadContent, saveContent, deleteContent, ContentPage } from '@/lib/arrurru-content';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import FileUploader from '@/components/FileUploader';
 
 const ARRURRUAdmin = () => {
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ const ARRURRUAdmin = () => {
   const [message, setMessage] = useState('');
   const [allUsers, setAllUsers] = useState<(User & { passwordHash: string; createdAt?: string })[]>([]);
   const [selectedUser, setSelectedUser] = useState<(User & { passwordHash: string; createdAt?: string }) | null>(null);
+  const [uploadedFiles, setUploadedFiles] = useState<{ url: string; name: string; type: 'document' | 'video' | 'image' }[]>([]);
 
   const SUPER_ADMIN_PASSWORD = 'marina_super_admin_2025';
 
@@ -86,6 +88,7 @@ const ARRURRUAdmin = () => {
       content: page.content,
       orderIndex: page.orderIndex
     });
+    setUploadedFiles(page.files.map(f => ({ url: f.url, name: f.name, type: f.type })));
     setEditMode(true);
   };
 
@@ -98,6 +101,7 @@ const ARRURRUAdmin = () => {
       content: '',
       orderIndex: 1
     });
+    setUploadedFiles([]);
     setEditMode(true);
   };
 
@@ -109,12 +113,14 @@ const ARRURRUAdmin = () => {
 
     const savedPage = saveContent({
       id: selectedContent?.id,
-      ...formData
+      ...formData,
+      files: uploadedFiles.map(f => ({ name: f.name, url: f.url, type: f.type }))
     });
 
     setMessage('Сохранено!');
     loadContentData();
     setSelectedContent(savedPage);
+    setUploadedFiles([]);
     setTimeout(() => setMessage(''), 2000);
   };
 
@@ -320,6 +326,40 @@ const ARRURRUAdmin = () => {
                           rows={15}
                           className="bg-slate-900/50 border-slate-700 text-white font-mono text-sm"
                         />
+                      </div>
+
+                      <div className="space-y-3">
+                        <label className="text-sm font-medium text-white">Прикрепленные файлы</label>
+                        <FileUploader
+                          onFileUploaded={(url, name, type) => {
+                            setUploadedFiles([...uploadedFiles, { url, name, type }]);
+                            setMessage(`Файл "${name}" загружен!`);
+                            setTimeout(() => setMessage(''), 2000);
+                          }}
+                        />
+                        {uploadedFiles.length > 0 && (
+                          <div className="space-y-2">
+                            {uploadedFiles.map((file, idx) => (
+                              <div key={idx} className="flex items-center justify-between p-3 bg-slate-900/50 rounded-lg border border-slate-700">
+                                <div className="flex items-center gap-2">
+                                  <Icon 
+                                    name={file.type === 'image' ? 'Image' : file.type === 'video' ? 'Video' : 'FileText'} 
+                                    size={20} 
+                                    className="text-amber-400" 
+                                  />
+                                  <span className="text-sm text-white">{file.name}</span>
+                                </div>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => setUploadedFiles(uploadedFiles.filter((_, i) => i !== idx))}
+                                >
+                                  <Icon name="Trash" size={16} className="text-red-400" />
+                                </Button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
 
                       <div className="flex gap-3">
