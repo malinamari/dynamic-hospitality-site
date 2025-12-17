@@ -7,6 +7,8 @@ export interface ContentPage {
   parentId?: string;
   orderIndex: number;
   files: ContentFile[];
+  hasExam?: boolean;
+  exam?: ExamQuestion[];
   createdAt: string;
   updatedAt: string;
 }
@@ -17,7 +19,37 @@ export interface ContentFile {
   type: 'document' | 'video' | 'image' | 'link';
 }
 
+export interface ExamQuestion {
+  id: string;
+  question: string;
+  options: string[];
+  correctAnswer: number;
+}
+
+export interface UserProgress {
+  userId: string;
+  contentId: string;
+  completed: boolean;
+  examScore?: number;
+  examAttempts: number;
+  lastAttemptDate?: string;
+  completedAt?: string;
+}
+
+export interface ExamResult {
+  userId: string;
+  userName: string;
+  contentId: string;
+  contentTitle: string;
+  score: number;
+  totalQuestions: number;
+  answers: { questionId: string; userAnswer: number; correct: boolean }[];
+  completedAt: string;
+}
+
 const STORAGE_KEY = 'arrurru_content';
+const PROGRESS_KEY = 'arrurru_progress';
+const EXAM_RESULTS_KEY = 'arrurru_exam_results';
 
 const getInitialContent = (): ContentPage[] => {
   return [
@@ -198,4 +230,78 @@ export const deleteContent = (id: string): boolean => {
     return true;
   }
   return false;
+};
+
+export const getUserProgress = (userId: string): UserProgress[] => {
+  const stored = localStorage.getItem(PROGRESS_KEY);
+  if (!stored) return [];
+  try {
+    const allProgress = JSON.parse(stored) as UserProgress[];
+    return allProgress.filter(p => p.userId === userId);
+  } catch {
+    return [];
+  }
+};
+
+export const saveUserProgress = (progress: UserProgress): void => {
+  const stored = localStorage.getItem(PROGRESS_KEY);
+  let allProgress: UserProgress[] = [];
+  
+  if (stored) {
+    try {
+      allProgress = JSON.parse(stored);
+    } catch {
+      allProgress = [];
+    }
+  }
+  
+  const existingIndex = allProgress.findIndex(
+    p => p.userId === progress.userId && p.contentId === progress.contentId
+  );
+  
+  if (existingIndex >= 0) {
+    allProgress[existingIndex] = progress;
+  } else {
+    allProgress.push(progress);
+  }
+  
+  localStorage.setItem(PROGRESS_KEY, JSON.stringify(allProgress));
+};
+
+export const saveExamResult = (result: ExamResult): void => {
+  const stored = localStorage.getItem(EXAM_RESULTS_KEY);
+  let allResults: ExamResult[] = [];
+  
+  if (stored) {
+    try {
+      allResults = JSON.parse(stored);
+    } catch {
+      allResults = [];
+    }
+  }
+  
+  allResults.push(result);
+  localStorage.setItem(EXAM_RESULTS_KEY, JSON.stringify(allResults));
+};
+
+export const getExamResults = (userId?: string): ExamResult[] => {
+  const stored = localStorage.getItem(EXAM_RESULTS_KEY);
+  if (!stored) return [];
+  
+  try {
+    const allResults = JSON.parse(stored) as ExamResult[];
+    return userId ? allResults.filter(r => r.userId === userId) : allResults;
+  } catch {
+    return [];
+  }
+};
+
+export const getAllProgress = (): UserProgress[] => {
+  const stored = localStorage.getItem(PROGRESS_KEY);
+  if (!stored) return [];
+  try {
+    return JSON.parse(stored);
+  } catch {
+    return [];
+  }
 };
