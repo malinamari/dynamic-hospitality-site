@@ -85,7 +85,7 @@ const FooterSection = () => {
                 <li><Link to="/cases" className="text-slate-400 hover:text-white transition-colors">Кейсы</Link></li>
                 <li><Link to="/blog" className="text-slate-400 hover:text-white transition-colors">Блог</Link></li>
                 <li><Link to="/quiz" className="text-slate-400 hover:text-white transition-colors">Консультация</Link></li>
-                <li><Link to="/arrurru/login" className="text-amber-400 hover:text-white transition-colors font-bold">🔐 Закрытая зона</Link></li>
+                <li><Link to="/arrurru/login" className="text-amber-400 hover:text-white transition-colors font-bold">📚 Обучение и проекты</Link></li>
               </ul>
             </div>
 

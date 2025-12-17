@@ -34,7 +34,7 @@ const Navigation = ({ scrollToSection }: NavigationProps) => {
             <Link to="/blog" className="text-sm font-medium hover:text-primary transition-colors">Блог</Link>
             <Link to="/faq" className="text-sm font-medium hover:text-primary transition-colors">FAQ</Link>
             <Button asChild size="sm" className="bg-gradient-to-r from-purple-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white font-bold">
-              <Link to="/arrurru/login">🔐 Закрытая зона</Link>
+              <Link to="/arrurru/login">📚 Обучение и проекты</Link>
             </Button>
           </div>
 
@@ -90,7 +90,7 @@ const Navigation = ({ scrollToSection }: NavigationProps) => {
               className="block w-full text-left py-2 text-sm font-bold text-purple-600 hover:text-amber-500 transition-colors"
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              🔐 Закрытая зона
+              📚 Обучение и проекты
             </Link>
           </div>
         )}

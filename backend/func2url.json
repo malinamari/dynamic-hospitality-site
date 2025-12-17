@@ -1,6 +1,1 @@
-{
-  "send-quiz-results": "https://functions.poehali.dev/4276991a-c1c0-4761-86fd-9a9e74eadf0d",
-  "send-checklist": "https://functions.poehali.dev/e1eae6a2-5c49-41d1-ae04-0ee93a5569be",
-  "submit-comment": "https://functions.poehali.dev/cbdcacb5-a4d6-41db-a410-03853cf63a86",
-  "submit-lead": "https://functions.poehali.dev/5d1ba8c6-82ca-42ab-be50-54dc6866b7b5"
-}
+{}

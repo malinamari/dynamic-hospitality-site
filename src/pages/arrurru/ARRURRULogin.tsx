@@ -41,9 +41,9 @@ const ARRURRULogin = () => {
       <div className="w-full max-w-md space-y-8">
         <div className="text-center space-y-4">
           <div className="inline-block p-4 bg-amber-500/20 backdrop-blur-sm rounded-full border-2 border-amber-500">
-            <Icon name="Shield" size={48} className="text-amber-400" />
+            <Icon name="GraduationCap" size={48} className="text-amber-400" />
           </div>
-          <h1 className="text-4xl font-black text-white">Закрытая зона</h1>
+          <h1 className="text-4xl font-black text-white">Обучение и проекты</h1>
           <p className="text-xl text-amber-400">Платформа для развития бизнеса</p>
           <p className="text-slate-300 max-w-md mx-auto">
             Добро пожаловать в образовательную платформу. После авторизации вы получите доступ к материалам вашего проекта.
