@@ -4,14 +4,18 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
 import { getCurrentUser, logout } from '@/lib/arrurru-auth';
-import { getContentBySection, ContentPage } from '@/lib/arrurru-content';
+import { getContentBySection, ContentPage, getUserProgress } from '@/lib/arrurru-content';
 import ReactMarkdown from 'react-markdown';
+import ExamComponent from '@/components/ExamComponent';
+import ImageGallery from '@/components/ImageGallery';
 
 const ARRURRUTrainingHall = () => {
   const navigate = useNavigate();
   const user = getCurrentUser();
   const [content, setContent] = useState<ContentPage[]>([]);
   const [selectedPage, setSelectedPage] = useState<ContentPage | null>(null);
+  const [showExam, setShowExam] = useState(false);
+  const [userProgress, setUserProgress] = useState<any[]>([]);
 
   useEffect(() => {
     if (!user) {
@@ -22,6 +26,10 @@ const ARRURRUTrainingHall = () => {
     setContent(pages);
     if (pages.length > 0) {
       setSelectedPage(pages[0]);
+    }
+    if (user) {
+      const progress = getUserProgress(user.id);
+      setUserProgress(progress);
     }
   }, [user, navigate]);
 
@@ -79,24 +87,41 @@ const ARRURRUTrainingHall = () => {
                 <CardContent className="p-4">
                   <h3 className="text-lg font-bold text-white mb-4">Модули обучения</h3>
                   <div className="space-y-2">
-                    {content.map((page, index) => (
-                      <button
-                        key={page.id}
-                        onClick={() => setSelectedPage(page)}
-                        className={`w-full text-left p-3 rounded-lg transition-colors ${
-                          selectedPage?.id === page.id
-                            ? 'bg-blue-500/30 text-white'
-                            : 'text-slate-300 hover:bg-slate-700/50 hover:text-white'
-                        }`}
-                      >
-                        <div className="flex items-center gap-2">
-                          <span className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-500/30 text-xs font-bold">
-                            {index + 1}
-                          </span>
-                          <span className="text-sm">{page.title}</span>
-                        </div>
-                      </button>
-                    ))}
+                    {content.map((page, index) => {
+                      const pageProgress = userProgress.find(p => p.contentId === page.id);
+                      const isCompleted = pageProgress?.completed || false;
+                      const score = pageProgress?.examScore;
+                      
+                      return (
+                        <button
+                          key={page.id}
+                          onClick={() => {
+                            setSelectedPage(page);
+                            setShowExam(false);
+                          }}
+                          className={`w-full text-left p-3 rounded-lg transition-colors ${
+                            selectedPage?.id === page.id
+                              ? 'bg-blue-500/30 text-white'
+                              : 'text-slate-300 hover:bg-slate-700/50 hover:text-white'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-500/30 text-xs font-bold">
+                                {index + 1}
+                              </span>
+                              <span className="text-sm">{page.title}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              {isCompleted && <Icon name="CheckCircle" size={16} className="text-green-400" />}
+                              {score !== undefined && (
+                                <span className="text-xs font-bold text-amber-400">{score}%</span>
+                              )}
+                            </div>
+                          </div>
+                        </button>
+                      );
+                    })}
                   </div>
                 </CardContent>
               </Card>
@@ -110,11 +135,13 @@ const ARRURRUTrainingHall = () => {
                       <ReactMarkdown>{selectedPage.content}</ReactMarkdown>
                     </article>
 
-                    {selectedPage.files.length > 0 && (
+                    <ImageGallery files={selectedPage.files} />
+
+                    {selectedPage.files.filter(f => f.type !== 'image').length > 0 && (
                       <div className="mt-8 pt-8 border-t border-slate-700">
                         <h3 className="text-lg font-bold text-white mb-4">Материалы модуля</h3>
                         <div className="grid sm:grid-cols-2 gap-4">
-                          {selectedPage.files.map((file, index) => (
+                          {selectedPage.files.filter(f => f.type !== 'image').map((file, index) => (
                             <a
                               key={index}
                               href={file.url}
@@ -136,6 +163,41 @@ const ARRURRUTrainingHall = () => {
                             </a>
                           ))}
                         </div>
+                      </div>
+                    )}
+
+                    {selectedPage.hasExam && selectedPage.exam && (
+                      <div className="mt-8 pt-8 border-t border-slate-700">
+                        {!showExam ? (
+                          <div className="text-center">
+                            <h3 className="text-xl font-bold text-white mb-4">Тест по модулю</h3>
+                            <p className="text-slate-300 mb-6">
+                              Проверьте свои знания по пройденному материалу
+                            </p>
+                            <Button
+                              onClick={() => setShowExam(true)}
+                              className="bg-amber-500 hover:bg-amber-600 text-white font-bold"
+                            >
+                              <Icon name="FileCheck" size={20} className="mr-2" />
+                              Пройти тест
+                            </Button>
+                          </div>
+                        ) : (
+                          <ExamComponent
+                            contentId={selectedPage.id}
+                            contentTitle={selectedPage.title}
+                            userId={user.id}
+                            userName={user.fullName}
+                            questions={selectedPage.exam}
+                            onComplete={(passed, score) => {
+                              const progress = getUserProgress(user.id);
+                              setUserProgress(progress);
+                              if (!passed) {
+                                setTimeout(() => setShowExam(false), 3000);
+                              }
+                            }}
+                          />
+                        )}
                       </div>
                     )}
                   </CardContent>

@@ -7,6 +7,7 @@ import { getCurrentUser, logout } from '@/lib/arrurru-auth';
 import { getContentBySection, ContentPage, getUserProgress } from '@/lib/arrurru-content';
 import ReactMarkdown from 'react-markdown';
 import ExamComponent from '@/components/ExamComponent';
+import ImageGallery from '@/components/ImageGallery';
 
 const ARRURRUCodeice = () => {
   const navigate = useNavigate();
@@ -125,11 +126,13 @@ const ARRURRUCodeice = () => {
                       <ReactMarkdown>{selectedPage.content}</ReactMarkdown>
                     </article>
 
-                    {selectedPage.files.length > 0 && (
+                    <ImageGallery files={selectedPage.files} />
+
+                    {selectedPage.files.filter(f => f.type !== 'image').length > 0 && (
                       <div className="mt-8 pt-8 border-t border-slate-700">
-                        <h3 className="text-lg font-bold text-white mb-4">Прикреплённые файлы</h3>
+                        <h3 className="text-lg font-bold text-white mb-4">Дополнительные материалы</h3>
                         <div className="grid sm:grid-cols-2 gap-4">
-                          {selectedPage.files.map((file, index) => (
+                          {selectedPage.files.filter(f => f.type !== 'image').map((file, index) => (
                             <a
                               key={index}
                               href={file.url}

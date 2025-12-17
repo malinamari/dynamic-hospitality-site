@@ -4,6 +4,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
 import { getCurrentUser, logout } from '@/lib/arrurru-auth';
+import { getUserProgress, getContentBySection } from '@/lib/arrurru-content';
+import { useState } from 'react';
+import ProgressBadge from '@/components/ProgressBadge';
 
 const sections = [
   {
@@ -43,6 +46,7 @@ const sections = [
 const ARRURRUDashboard = () => {
   const navigate = useNavigate();
   const user = getCurrentUser();
+  const [userProgress] = useState(() => user ? getUserProgress(user.id) : []);
 
   useEffect(() => {
     if (!user) {
@@ -100,22 +104,101 @@ const ARRURRUDashboard = () => {
 
       <div className="pt-24 pb-16 px-6">
         <div className="container mx-auto max-w-6xl">
-          <div className="text-center space-y-4 mb-12">
-            <h2 className="text-4xl md:text-5xl font-black text-white">
-              Добро пожаловать, {user.fullName.split(' ')[0]}!
-            </h2>
-            <p className="text-xl text-amber-400">
-              {user.role === 'super_admin' 
-                ? 'Генеральный доступ ко всем проектам'
-                : `Профиль проекта: ${user.projectName || 'ARRURRU'}`}
-            </p>
-            <p className="text-slate-300">
-              Выберите раздел для работы
-            </p>
+          <div className="mb-12">
+            <div className="text-center space-y-4 mb-8">
+              <h2 className="text-4xl md:text-5xl font-black text-white">
+                Добро пожаловать, {user.fullName.split(' ')[0]}!
+              </h2>
+              <p className="text-xl text-amber-400">
+                {user.role === 'super_admin' 
+                  ? 'Генеральный доступ ко всем проектам'
+                  : `Профиль проекта: ${user.projectName || 'ARRURRU'}`}
+              </p>
+            </div>
+            
+            {/* Прогресс-бар */}
+            <Card className="bg-gradient-to-r from-amber-500/20 to-purple-500/20 backdrop-blur-sm border-2 border-amber-500/30">
+              <CardContent className="p-6">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-xl font-bold text-white">Ваш прогресс обучения</h3>
+                      <p className="text-sm text-slate-300">Пройдено {userProgress.filter(p => p.completed).length} из {(() => {
+                        const codice = getContentBySection('codice');
+                        const trainingHall = getContentBySection('training-hall');
+                        return codice.filter(p => p.hasExam).length + trainingHall.filter(p => p.hasExam).length;
+                      })()} экзаменов</p>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-3xl font-black text-amber-400">
+                        {Math.round((userProgress.filter(p => p.completed).length / (() => {
+                          const codice = getContentBySection('codice');
+                          const trainingHall = getContentBySection('training-hall');
+                          return codice.filter(p => p.hasExam).length + trainingHall.filter(p => p.hasExam).length;
+                        })()) * 100) || 0}%
+                      </div>
+                      <p className="text-xs text-slate-400">Завершено</p>
+                    </div>
+                  </div>
+                  <div className="w-full bg-slate-700 rounded-full h-3 overflow-hidden">
+                    <div 
+                      className="h-full bg-gradient-to-r from-amber-500 to-purple-500 transition-all duration-500"
+                      style={{
+                        width: `${Math.round((userProgress.filter(p => p.completed).length / (() => {
+                          const codice = getContentBySection('codice');
+                          const trainingHall = getContentBySection('training-hall');
+                          return codice.filter(p => p.hasExam).length + trainingHall.filter(p => p.hasExam).length;
+                        })()) * 100) || 0}%`
+                      }}
+                    />
+                  </div>
+                  {userProgress.length > 0 && (
+                    <div className="grid grid-cols-3 gap-4 pt-4 border-t border-slate-700">
+                      <div className="text-center">
+                        <Icon name="Target" size={24} className="text-amber-400 mx-auto mb-2" />
+                        <div className="text-2xl font-bold text-white">
+                          {Math.round(userProgress.reduce((sum, p) => sum + (p.examScore || 0), 0) / userProgress.length) || 0}%
+                        </div>
+                        <p className="text-xs text-slate-400">Средний балл</p>
+                      </div>
+                      <div className="text-center">
+                        <Icon name="Trophy" size={24} className="text-amber-400 mx-auto mb-2" />
+                        <div className="text-2xl font-bold text-white">
+                          {userProgress.filter(p => p.completed).length}
+                        </div>
+                        <p className="text-xs text-slate-400">Пройдено тестов</p>
+                      </div>
+                      <div className="text-center">
+                        <Icon name="Zap" size={24} className="text-amber-400 mx-auto mb-2" />
+                        <div className="text-2xl font-bold text-white">
+                          {userProgress.reduce((sum, p) => sum + p.examAttempts, 0)}
+                        </div>
+                        <p className="text-xs text-slate-400">Всего попыток</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+            
+            {/* Достижения */}
+            {userProgress.length > 0 && (
+              <ProgressBadge userProgress={userProgress} />
+            )}
           </div>
 
           <div className="grid sm:grid-cols-2 gap-6">
-            {sections.map((section) => (
+            {sections.map((section) => {
+              const sectionContent = getContentBySection(section.id as any);
+              const sectionExams = sectionContent.filter(p => p.hasExam);
+              const completedInSection = userProgress.filter(p => 
+                sectionExams.some(c => c.id === p.contentId) && p.completed
+              ).length;
+              const progressPercentage = sectionExams.length > 0 
+                ? Math.round((completedInSection / sectionExams.length) * 100)
+                : 0;
+              
+              return (
               <Card
                 key={section.id}
                 className="group bg-slate-800/50 backdrop-blur-sm border-2 border-amber-500/30 hover:border-amber-500 transition-all duration-300 hover:scale-105 cursor-pointer"
@@ -133,6 +216,22 @@ const ARRURRUDashboard = () => {
                       <p className="text-slate-300">
                         {section.description}
                       </p>
+                      {sectionExams.length > 0 && (
+                        <div className="pt-2">
+                          <div className="flex items-center justify-center gap-2 text-sm mb-2">
+                            <Icon name="CheckCircle" size={16} className="text-green-400" />
+                            <span className="text-white font-medium">
+                              {completedInSection}/{sectionExams.length} экзаменов
+                            </span>
+                          </div>
+                          <div className="w-full bg-slate-700 rounded-full h-2 overflow-hidden">
+                            <div 
+                              className={`h-full bg-gradient-to-r ${section.color} transition-all duration-500`}
+                              style={{ width: `${progressPercentage}%` }}
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
                     <div className="flex justify-center">
                       <Button
@@ -147,7 +246,8 @@ const ARRURRUDashboard = () => {
                   </div>
                 </CardContent>
               </Card>
-            ))}
+              );
+            })}
           </div>
 
           {(user.role === 'manager' || user.role === 'super_admin') && (

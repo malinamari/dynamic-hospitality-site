@@ -83,7 +83,18 @@ ARRURRU — это не просто ресторан. Это пространс
 - Качество превыше скорости
 - Предвосхищай желания гостя`,
       orderIndex: 1,
-      files: [],
+      files: [
+        {
+          name: 'Интерьер ARRURRU - Бар',
+          url: 'https://cdn.poehali.dev/projects/a0f1d64c-d8ab-4496-af89-52912fc87ab2/files/eda07bdf-7d54-457b-a9b9-dac81cf1ab3f.jpg',
+          type: 'image'
+        },
+        {
+          name: 'Основной зал',
+          url: 'https://cdn.poehali.dev/projects/a0f1d64c-d8ab-4496-af89-52912fc87ab2/files/77d1d8db-a8db-4fc7-879f-97a47ee5ceb4.jpg',
+          type: 'image'
+        }
+      ],
       hasExam: true,
       exam: [
         {
@@ -198,7 +209,13 @@ ARRURRU — это не просто ресторан. Это пространс
 - Передаём информацию о гостях (предпочтения, аллергии)
 - Поддерживаем позитивную атмосферу`,
       orderIndex: 2,
-      files: [],
+      files: [
+        {
+          name: 'Обучение сервису',
+          url: 'https://cdn.poehali.dev/projects/a0f1d64c-d8ab-4496-af89-52912fc87ab2/files/527cd81b-b845-4348-9897-17aa1bbef94e.jpg',
+          type: 'image'
+        }
+      ],
       hasExam: true,
       exam: [
         {
@@ -355,7 +372,13 @@ ARRURRU — это не просто ресторан. Это пространс
 4. Сообщаем управляющему
 5. Оплачиваем химчистку при необходимости`,
       orderIndex: 3,
-      files: [],
+      files: [
+        {
+          name: 'Сервировка и атмосфера',
+          url: 'https://cdn.poehali.dev/projects/a0f1d64c-d8ab-4496-af89-52912fc87ab2/files/77d1d8db-a8db-4fc7-879f-97a47ee5ceb4.jpg',
+          type: 'image'
+        }
+      ],
       hasExam: true,
       exam: [
         {
@@ -425,7 +448,18 @@ ARRURRU — это не просто ресторан. Это пространс
 ## Практика
 Прохождение по всем зонам ресторана с управляющим.`,
       orderIndex: 1,
-      files: [],
+      files: [
+        {
+          name: 'Основной зал ARRURRU',
+          url: 'https://cdn.poehali.dev/projects/a0f1d64c-d8ab-4496-af89-52912fc87ab2/files/77d1d8db-a8db-4fc7-879f-97a47ee5ceb4.jpg',
+          type: 'image'
+        },
+        {
+          name: 'Барная зона',
+          url: 'https://cdn.poehali.dev/projects/a0f1d64c-d8ab-4496-af89-52912fc87ab2/files/eda07bdf-7d54-457b-a9b9-dac81cf1ab3f.jpg',
+          type: 'image'
+        }
+      ],
       hasExam: true,
       exam: [
         {
@@ -508,7 +542,13 @@ ARRURRU — это не просто ресторан. Это пространс
 - "Я уже наелся" → "Тогда можем упаковать с собой"
 - "Дорого" → "Это блюдо на двоих, получается очень выгодно"`,
       orderIndex: 2,
-      files: [],
+      files: [
+        {
+          name: 'Обучение техникам продаж',
+          url: 'https://cdn.poehali.dev/projects/a0f1d64c-d8ab-4496-af89-52912fc87ab2/files/527cd81b-b845-4348-9897-17aa1bbef94e.jpg',
+          type: 'image'
+        }
+      ],
       hasExam: true,
       exam: [
         {
@@ -633,7 +673,13 @@ ARRURRU — это не просто ресторан. Это пространс
 - Не навязываемся, когда не нужно
 - Проявляем эмпатию`,
       orderIndex: 3,
-      files: [],
+      files: [
+        {
+          name: 'Работа с гостями',
+          url: 'https://cdn.poehali.dev/projects/a0f1d64c-d8ab-4496-af89-52912fc87ab2/files/527cd81b-b845-4348-9897-17aa1bbef94e.jpg',
+          type: 'image'
+        }
+      ],
       hasExam: true,
       exam: [
         {
@@ -784,7 +830,13 @@ ARRURRU — это не просто ресторан. Это пространс
 - Делимся опытом
 - Растём вместе`,
       orderIndex: 4,
-      files: [],
+      files: [
+        {
+          name: 'Командная работа',
+          url: 'https://cdn.poehali.dev/projects/a0f1d64c-d8ab-4496-af89-52912fc87ab2/files/cd7321bc-5c60-4e85-ace6-7754a13ea3a1.jpg',
+          type: 'image'
+        }
+      ],
       hasExam: true,
       exam: [
         {
@@ -887,7 +939,13 @@ ARRURRU — это не просто ресторан. Это пространс
 - Чувствовать поддержку команды
 - Хотеть работать вместе`,
       orderIndex: 1,
-      files: [],
+      files: [
+        {
+          name: 'Командообразование',
+          url: 'https://cdn.poehali.dev/projects/a0f1d64c-d8ab-4496-af89-52912fc87ab2/files/cd7321bc-5c60-4e85-ace6-7754a13ea3a1.jpg',
+          type: 'image'
+        }
+      ],
       hasExam: false,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
@@ -1077,7 +1135,18 @@ ARRURRU — это не просто ресторан. Это пространс
 2. Провести самоанализ последней смены
 3. Подготовить 3 вопроса к следующему тренингу`,
       orderIndex: 3,
-      files: [],
+      files: [
+        {
+          name: 'Обучение стандартам сервиса',
+          url: 'https://cdn.poehali.dev/projects/a0f1d64c-d8ab-4496-af89-52912fc87ab2/files/527cd81b-b845-4348-9897-17aa1bbef94e.jpg',
+          type: 'image'
+        },
+        {
+          name: 'Интерьер зала',
+          url: 'https://cdn.poehali.dev/projects/a0f1d64c-d8ab-4496-af89-52912fc87ab2/files/77d1d8db-a8db-4fc7-879f-97a47ee5ceb4.jpg',
+          type: 'image'
+        }
+      ],
       hasExam: false,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
