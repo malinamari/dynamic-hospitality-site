@@ -14,8 +14,8 @@ const ServicesSection = () => {
       iconBg: 'bg-rose-100',
       iconColor: 'text-rose-600',
       title: 'Аудит "ДНК"',
-      price: 'от 60 000₽',
-      duration: '5-7 дней',
+      price: 'от 45 000₽',
+      duration: '5-7 дней работы',
       description: 'Глубокий анализ всех аспектов вашего бизнеса',
       features: [
         'Анализ концепции и брендинга',
@@ -36,8 +36,8 @@ const ServicesSection = () => {
       iconBg: 'bg-orange-100',
       iconColor: 'text-orange-600',
       title: 'Авторский тренинг',
-      price: 'от 25 000₽',
-      duration: '1 день',
+      price: 'от 20 000₽',
+      duration: '1 день работы',
       description: 'Один авторский тренинг по выбранной вами теме',
       features: [
         'Выбор темы: продажи, сервис, винный этикет, конфликты',
@@ -57,7 +57,7 @@ const ServicesSection = () => {
       iconBg: 'bg-teal-100',
       iconColor: 'text-teal-600',
       title: 'Полное сопровождение',
-      price: 'от 180 000₽/мес',
+      price: 'от 150 000₽/мес',
       duration: 'от 3 месяцев',
       description: 'Становлюсь вашим внешним директором по продажам на три месяца',
       features: [

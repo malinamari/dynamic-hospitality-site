@@ -10,8 +10,8 @@ const PricingSection = ({ scrollToSection }: PricingSectionProps) => {
   const plans = [
     {
       name: 'АУДИТ "ДНК"',
-      price: 'от 45,000₽',
-      duration: '5-7 дней',
+      price: 'от 35,000₽',
+      duration: '5-7 дней работы',
       description: 'Найду корни проблем, а не симптомы',
       popular: false,
       features: [
@@ -27,8 +27,8 @@ const PricingSection = ({ scrollToSection }: PricingSectionProps) => {
     },
     {
       name: 'ТРЕНИНГ ПОД КЛЮЧ',
-      price: 'от 65,000₽',
-      duration: '2-3 дня + 30 дней',
+      price: 'от 45,000₽',
+      duration: '2-3 дня работы + 30 дней поддержки',
       description: 'Научу продавать всё — даже немыслимое',
       popular: false,
       features: [
@@ -44,7 +44,7 @@ const PricingSection = ({ scrollToSection }: PricingSectionProps) => {
     },
     {
       name: 'ИНТЕНСИВ "7 ДНЕЙ"',
-      price: 'от 120,000₽',
+      price: 'от 65,000₽',
       duration: '7 дней работы',
       description: 'Авторская методика — система за неделю',
       popular: true,
@@ -61,7 +61,7 @@ const PricingSection = ({ scrollToSection }: PricingSectionProps) => {
     },
     {
       name: 'FULL СОПРОВОЖДЕНИЕ',
-      price: 'от 150,000₽/мес',
+      price: 'от 120,000₽/мес',
       duration: 'от 3 месяцев',
       description: 'Становлюсь частью вашей команды',
       popular: false,
@@ -172,7 +172,7 @@ const PricingSection = ({ scrollToSection }: PricingSectionProps) => {
                 className="font-black text-xl px-12 py-8 bg-amber-500 hover:bg-amber-600 text-slate-900 shadow-xl"
                 onClick={() => scrollToSection('contact')}
               >
-                ЗАПОЛНИТЬ БРИФ НА КОНСУЛЬТАЦИЮ →
+                ЗАПОЛНИТЬ БРИФ НА ЭКСПЕРТНУЮ КОНСУЛЬТАЦИЮ →
               </Button>
             </CardContent>
           </Card>

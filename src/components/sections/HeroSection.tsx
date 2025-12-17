@@ -47,7 +47,7 @@ const HeroSection = ({ scrollToSection }: HeroSectionProps) => {
             
             <div className="inline-block bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl px-6 py-3">
               <p className="text-base sm:text-lg text-white font-semibold">
-                💎 Формат: Интенсив «7 дней» — полная трансформация команды
+                💎 Формат: Интенсив «7 дней работы» — полная трансформация команды
               </p>
             </div>
           </div>
@@ -66,7 +66,7 @@ const HeroSection = ({ scrollToSection }: HeroSectionProps) => {
               className="w-full sm:w-auto text-base px-8 py-6 font-semibold shadow-xl hover:scale-105 transition-transform bg-white/10 backdrop-blur-sm text-white border-2 border-white/50 hover:bg-white/20" 
               onClick={() => scrollToSection('contact')}
             >
-              Записаться на консультацию
+              Записаться на экспертную консультацию
             </Button>
           </div>
         </div>

@@ -24,13 +24,13 @@ const AboutSection = ({ scrollToSection }: AboutSectionProps) => {
               
               <div className="bg-primary/5 border-l-4 border-primary p-6 rounded-r-xl">
                 <p className="text-foreground text-lg font-semibold">
-                  13 лет в общепите. От официанта до куратора закрытого клуба в Москве, аналогов которому нет. Работала только в премиальных ресторанах и международных отелях.
+                  13 лет в общепите. Мой путь до эксперта — от линейных позиций до куратора закрытого клуба в Москве, аналогов которому нет. Работала только в премиальных ресторанах и международных отелях.
                 </p>
               </div>
 
               <div className="space-y-4 text-foreground/90 text-lg">
                 <p>
-                  Прошла путь от официантки до управляющей. Руководила сигарными и закрытыми клубами, создавала уникальные концепции и форматы. <strong>С 2020 года стала уникальным специалистом по развитию сервиса и продаж.</strong>
+                  Прошла путь от линейных позиций до управляющей. Руководила сигарными и закрытыми клубами, создавала уникальные концепции и форматы. <strong>С 2020 года стала экспертом по развитию сервиса и продаж.</strong>
                 </p>
 
                 <p className="font-semibold text-xl text-foreground">
@@ -46,7 +46,7 @@ const AboutSection = ({ scrollToSection }: AboutSectionProps) => {
 
               <div className="flex gap-4">
                 <Button size="lg" className="flex-1" onClick={() => scrollToSection('contact')}>
-                  Бесплатная консультация
+                  Бесплатная экспертная консультация
                 </Button>
                 <Button size="lg" variant="outline" className="flex-1 border-2" onClick={() => scrollToSection('services')}>
                   Посмотреть услуги
@@ -56,7 +56,7 @@ const AboutSection = ({ scrollToSection }: AboutSectionProps) => {
           </div>
 
           <div className="bg-card border-2 border-border p-8 rounded-2xl">
-            <h3 className="text-3xl font-black text-foreground mb-6 text-center">Что отличает меня от других консультантов</h3>
+            <h3 className="text-3xl font-black text-foreground mb-6 text-center">Что отличает меня от других экспертов</h3>
             <div className="grid md:grid-cols-3 gap-6">
               <div className="flex flex-col items-center text-center space-y-3 p-6 bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border-2 border-primary/20">
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
