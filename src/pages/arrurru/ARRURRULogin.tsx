@@ -12,17 +12,10 @@ const ARRURRULogin = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-
-    if (!agreedToTerms) {
-      setError('Необходимо согласие на обработку данных');
-      return;
-    }
-
     setLoading(true);
 
     const result = await login(email, password);
@@ -77,20 +70,6 @@ const ARRURRULogin = () => {
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="flex items-start gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={agreedToTerms}
-                    onChange={(e) => setAgreedToTerms(e.target.checked)}
-                    className="mt-1 w-4 h-4 rounded border-slate-700 bg-slate-900/50 text-amber-500 focus:ring-amber-500"
-                  />
-                  <span className="text-xs text-slate-300">
-                    Я согласен на обработку персональных данных и принимаю условия использования платформы
-                  </span>
-                </label>
-              </div>
-
               {error && (
                 <div className="p-3 bg-red-500/20 border border-red-500/50 rounded-lg">
                   <p className="text-sm text-red-300">{error}</p>
@@ -99,7 +78,7 @@ const ARRURRULogin = () => {
 
               <Button
                 type="submit"
-                disabled={loading || !agreedToTerms}
+                disabled={loading}
                 className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? 'Вход...' : 'Войти в систему'}
