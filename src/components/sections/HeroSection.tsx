@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import GiftForm from '@/components/GiftForm';
 import {
@@ -14,6 +15,7 @@ interface HeroSectionProps {
 
 const HeroSection = ({ scrollToSection }: HeroSectionProps) => {
   const [isGiftModalOpen, setIsGiftModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-primary/20 to-slate-800">
@@ -63,10 +65,10 @@ const HeroSection = ({ scrollToSection }: HeroSectionProps) => {
             <Button 
               size="lg" 
               variant="outline"
-              className="w-full sm:w-auto text-base px-8 py-6 font-semibold shadow-xl hover:scale-105 transition-transform bg-white/10 backdrop-blur-sm text-white border-2 border-white/50 hover:bg-white/20" 
-              onClick={() => scrollToSection('contact')}
+              className="w-full sm:w-auto text-base px-8 py-6 font-semibold shadow-xl hover:scale-105 transition-transform bg-gradient-to-r from-purple-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white border-2 border-white/50" 
+              onClick={() => navigate('/arrurru/login')}
             >
-              Записаться на экспертную консультацию
+              🎓 Личный кабинет ARRURRU
             </Button>
           </div>
         </div>

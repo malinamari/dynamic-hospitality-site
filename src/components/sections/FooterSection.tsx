@@ -73,7 +73,7 @@ const FooterSection = () => {
             <div className="md:col-span-1">
               <h3 className="text-2xl font-black text-amber-400 mb-3">MARICO PRO</h3>
               <p className="text-sm text-slate-400 leading-relaxed">
-                Консультант №1 по продажам и сервису в HoReCa. 15 лет практики в премиум-сегменте.
+                Эксперт №1 по продажам и сервису в HoReCa. 15 лет практики в премиум-сегменте.
               </p>
             </div>
 
@@ -85,7 +85,7 @@ const FooterSection = () => {
                 <li><Link to="/cases" className="text-slate-400 hover:text-white transition-colors">Кейсы</Link></li>
                 <li><Link to="/blog" className="text-slate-400 hover:text-white transition-colors">Блог</Link></li>
                 <li><Link to="/quiz" className="text-slate-400 hover:text-white transition-colors">Консультация</Link></li>
-                <li><Link to="/contact" className="text-slate-400 hover:text-white transition-colors">Контакты</Link></li>
+                <li><Link to="/arrurru/login" className="text-amber-400 hover:text-white transition-colors font-bold">🎓 Личный кабинет</Link></li>
               </ul>
             </div>
 

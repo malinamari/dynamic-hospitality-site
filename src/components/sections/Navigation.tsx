@@ -33,8 +33,8 @@ const Navigation = ({ scrollToSection }: NavigationProps) => {
             <Link to="/quiz" className="text-sm font-medium text-primary hover:underline transition-colors">Консультация</Link>
             <Link to="/blog" className="text-sm font-medium hover:text-primary transition-colors">Блог</Link>
             <Link to="/faq" className="text-sm font-medium hover:text-primary transition-colors">FAQ</Link>
-            <Button asChild size="sm">
-              <Link to="/contact">Связаться</Link>
+            <Button asChild size="sm" className="bg-gradient-to-r from-purple-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white font-bold">
+              <Link to="/arrurru/login">🎓 Личный кабинет</Link>
             </Button>
           </div>
 
@@ -86,11 +86,11 @@ const Navigation = ({ scrollToSection }: NavigationProps) => {
               FAQ
             </Link>
             <Link 
-              to="/contact" 
-              className="block w-full text-left py-2 text-sm font-medium hover:text-primary transition-colors"
+              to="/arrurru/login" 
+              className="block w-full text-left py-2 text-sm font-bold text-purple-600 hover:text-amber-500 transition-colors"
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              Связаться
+              🎓 Личный кабинет
             </Link>
           </div>
         )}
