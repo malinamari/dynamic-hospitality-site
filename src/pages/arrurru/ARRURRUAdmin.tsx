@@ -5,14 +5,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import Icon from '@/components/ui/icon';
-import { getCurrentUser, logout, createInvitation } from '@/lib/arrurru-auth';
+import { getCurrentUser, logout, createInvitation, User } from '@/lib/arrurru-auth';
 import { loadContent, saveContent, deleteContent, ContentPage } from '@/lib/arrurru-content';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const ARRURRUAdmin = () => {
   const navigate = useNavigate();
   const user = getCurrentUser();
-  const [activeTab, setActiveTab] = useState<'content' | 'invites'>('content');
+  const [activeTab, setActiveTab] = useState<'content' | 'invites' | 'users'>('content');
   
   const [content, setContent] = useState<ContentPage[]>([]);
   const [selectedContent, setSelectedContent] = useState<ContentPage | null>(null);
@@ -30,6 +30,10 @@ const ARRURRUAdmin = () => {
   const [adminPassword, setAdminPassword] = useState('');
   const [inviteUrl, setInviteUrl] = useState('');
   const [message, setMessage] = useState('');
+  const [allUsers, setAllUsers] = useState<(User & { passwordHash: string; createdAt?: string })[]>([]);
+  const [selectedUser, setSelectedUser] = useState<(User & { passwordHash: string; createdAt?: string }) | null>(null);
+
+  const SUPER_ADMIN_PASSWORD = 'marina_super_admin_2025';
 
   useEffect(() => {
     if (!user || user.role !== 'manager') {
@@ -37,7 +41,31 @@ const ARRURRUAdmin = () => {
       return;
     }
     loadContentData();
+    loadAllUsers();
   }, [user, navigate]);
+
+  const loadAllUsers = () => {
+    const users = JSON.parse(localStorage.getItem('arrurru_users') || '[]');
+    setAllUsers(users);
+  };
+
+  const handleDeleteUser = (userId: string) => {
+    const password = prompt('Введите супер-админ пароль для удаления пользователя:');
+    if (password !== SUPER_ADMIN_PASSWORD) {
+      setMessage('Неверный пароль!');
+      setTimeout(() => setMessage(''), 2000);
+      return;
+    }
+
+    if (confirm('Удалить этого пользователя?')) {
+      const users = JSON.parse(localStorage.getItem('arrurru_users') || '[]');
+      const filtered = users.filter((u: any) => u.id !== userId);
+      localStorage.setItem('arrurru_users', JSON.stringify(filtered));
+      loadAllUsers();
+      setMessage('Пользователь удален');
+      setTimeout(() => setMessage(''), 2000);
+    }
+  };
 
   const loadContentData = () => {
     const allContent = loadContent();
@@ -193,6 +221,14 @@ const ARRURRUAdmin = () => {
               <Icon name="Mail" size={20} className="mr-2" />
               Приглашения
             </Button>
+            <Button
+              onClick={() => setActiveTab('users')}
+              variant={activeTab === 'users' ? 'default' : 'ghost'}
+              className={activeTab === 'users' ? 'bg-amber-500' : ''}
+            >
+              <Icon name="Users" size={20} className="mr-2" />
+              Пользователи
+            </Button>
           </div>
 
           {activeTab === 'content' && (
@@ -322,6 +358,135 @@ const ARRURRUAdmin = () => {
                   </Card>
                 )}
               </main>
+            </div>
+          )}
+
+          {activeTab === 'users' && (
+            <div className="max-w-4xl mx-auto">
+              <Card className="bg-slate-800/50 backdrop-blur-sm border-2 border-amber-500/30">
+                <CardContent className="p-8">
+                  <div className="mb-6">
+                    <h3 className="text-2xl font-bold text-white mb-2">Все пользователи системы</h3>
+                    <p className="text-slate-400">Супер-админ панель просмотра всех аккаунтов</p>
+                  </div>
+
+                  <div className="space-y-4">
+                    {allUsers.length === 0 ? (
+                      <div className="text-center py-8">
+                        <Icon name="Users" size={64} className="text-slate-600 mx-auto mb-4" />
+                        <p className="text-slate-400">Пользователи не найдены</p>
+                      </div>
+                    ) : (
+                      allUsers.map((userData) => (
+                        <Card
+                          key={userData.id}
+                          className="bg-slate-900/50 border border-slate-700 hover:border-amber-500/50 transition-colors cursor-pointer"
+                          onClick={() => setSelectedUser(userData)}
+                        >
+                          <CardContent className="p-6">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-3 mb-3">
+                                  <div className="p-2 bg-amber-500/20 rounded-lg">
+                                    <Icon name="User" size={24} className="text-amber-400" />
+                                  </div>
+                                  <div>
+                                    <h4 className="text-lg font-bold text-white">{userData.fullName}</h4>
+                                    <p className="text-sm text-slate-400">{userData.email}</p>
+                                  </div>
+                                </div>
+                                <div className="grid grid-cols-2 gap-4 text-sm">
+                                  <div>
+                                    <p className="text-slate-500">ID</p>
+                                    <p className="text-white font-mono text-xs">{userData.id}</p>
+                                  </div>
+                                  <div>
+                                    <p className="text-slate-500">Роль</p>
+                                    <p className="text-amber-400 font-medium">
+                                      {userData.role === 'manager' ? 'Управляющий' : 'Персонал зала'}
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <p className="text-slate-500">Password Hash</p>
+                                    <p className="text-white font-mono text-xs truncate">{userData.passwordHash}</p>
+                                  </div>
+                                  <div>
+                                    <p className="text-slate-500">Дата создания</p>
+                                    <p className="text-white text-xs">
+                                      {userData.createdAt ? new Date(userData.createdAt).toLocaleString('ru-RU') : 'Не указана'}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDeleteUser(userData.id);
+                                }}
+                                className="text-red-400 hover:text-red-300 hover:bg-red-500/20"
+                              >
+                                <Icon name="Trash2" size={18} />
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))
+                    )}
+                  </div>
+
+                  {selectedUser && (
+                    <div className="mt-6 p-6 bg-purple-500/10 border border-purple-500/30 rounded-lg">
+                      <h4 className="text-lg font-bold text-white mb-4">Детали пользователя</h4>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">Полное имя:</span>
+                          <span className="text-white font-medium">{selectedUser.fullName}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">Email:</span>
+                          <span className="text-white font-medium">{selectedUser.email}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">ID:</span>
+                          <span className="text-white font-mono text-xs">{selectedUser.id}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">Роль:</span>
+                          <span className="text-amber-400">{selectedUser.role}</span>
+                        </div>
+                        <div className="border-t border-purple-500/30 pt-2 mt-2">
+                          <p className="text-slate-400 mb-1">Password Hash (SHA-256):</p>
+                          <p className="text-white font-mono text-xs break-all bg-slate-900/50 p-2 rounded">
+                            {selectedUser.passwordHash}
+                          </p>
+                        </div>
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => setSelectedUser(null)}
+                        className="mt-4 w-full text-slate-400 hover:text-white"
+                      >
+                        Закрыть детали
+                      </Button>
+                    </div>
+                  )}
+
+                  <div className="mt-8 p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
+                    <div className="flex items-start gap-3">
+                      <Icon name="Shield" size={20} className="text-yellow-400 mt-1" />
+                      <div>
+                        <p className="text-yellow-400 font-bold mb-1">Супер-админ функции</p>
+                        <p className="text-slate-300 text-sm">
+                          Для удаления пользователя требуется супер-админ пароль: <code className="text-amber-400 bg-slate-900/50 px-2 py-1 rounded">marina_super_admin_2025</code>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           )}
 
