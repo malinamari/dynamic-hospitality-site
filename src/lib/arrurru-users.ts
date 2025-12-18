@@ -24,7 +24,15 @@ export const getAllUsers = (): User[] => {
   }
 };
 
-export const initializeDemoData = () => {
+const hashPassword = async (password: string): Promise<string> => {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+};
+
+export const initializeDemoData = async () => {
   const existingUsers = getAllUsers();
   const existingProgress = localStorage.getItem('arrurru_progress');
   if (existingUsers.length > 0 && existingProgress) return;
@@ -36,7 +44,7 @@ export const initializeDemoData = () => {
       fullName: 'Управляющий',
       role: 'manager',
       projectName: 'ARRURRU',
-      passwordHash: 'arrurru2024'
+      passwordHash: await hashPassword('arrurru2024')
     },
     {
       id: 'user-1',
@@ -44,7 +52,7 @@ export const initializeDemoData = () => {
       fullName: 'Анна Смирнова',
       role: 'staff',
       projectName: 'ARRURRU',
-      passwordHash: 'demo123'
+      passwordHash: await hashPassword('demo123')
     },
     {
       id: 'user-2',
@@ -52,7 +60,7 @@ export const initializeDemoData = () => {
       fullName: 'Иван Петров',
       role: 'staff',
       projectName: 'ARRURRU',
-      passwordHash: 'demo123'
+      passwordHash: await hashPassword('demo123')
     },
     {
       id: 'user-3',
@@ -60,7 +68,7 @@ export const initializeDemoData = () => {
       fullName: 'Мария Козлова',
       role: 'manager',
       projectName: 'ARRURRU',
-      passwordHash: 'demo123'
+      passwordHash: await hashPassword('demo123')
     },
     {
       id: 'user-4',
@@ -68,7 +76,7 @@ export const initializeDemoData = () => {
       fullName: 'Дмитрий Новиков',
       role: 'staff',
       projectName: 'ARRURRU',
-      passwordHash: 'demo123'
+      passwordHash: await hashPassword('demo123')
     },
     {
       id: 'user-5',
@@ -76,7 +84,7 @@ export const initializeDemoData = () => {
       fullName: 'Ольга Соколова',
       role: 'staff',
       projectName: 'ARRURRU',
-      passwordHash: 'demo123'
+      passwordHash: await hashPassword('demo123')
     }
   ];
 

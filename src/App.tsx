@@ -33,7 +33,8 @@ import "./lib/arrurru-reset";
 
 const queryClient = new QueryClient();
 
-initializeDemoData();
+// Initialize demo data asynchronously
+initializeDemoData().catch(console.error);
 forceContentUpdate();
 
 const App = () => (
