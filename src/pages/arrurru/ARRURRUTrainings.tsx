@@ -7,6 +7,7 @@ import { getCurrentUser, logout } from '@/lib/arrurru-auth';
 import { getContentBySection, ContentPage } from '@/lib/arrurru-content';
 import ReactMarkdown from 'react-markdown';
 import ImageGallery from '@/components/ImageGallery';
+import ReportErrorButton from '@/components/ReportErrorButton';
 
 const ARRURRUTrainings = () => {
   const navigate = useNavigate();
@@ -56,6 +57,7 @@ const ARRURRUTrainings = () => {
               </div>
             </div>
             <div className="flex items-center gap-4">
+              <ReportErrorButton pageName="Тренинги" />
               <div className="text-right hidden sm:block">
                 <p className="text-sm font-medium text-white">{user.fullName}</p>
               </div>
@@ -139,26 +141,33 @@ const ARRURRUTrainings = () => {
             <aside className="lg:col-span-1">
               <Card className="bg-slate-800/50 backdrop-blur-sm border-2 border-amber-500/30 sticky top-24 max-h-[calc(100vh-7rem)] overflow-hidden flex flex-col">
                 <CardContent className="p-4 flex flex-col overflow-hidden">
-                  <h3 className="text-lg font-bold text-white mb-4 flex-shrink-0">Список тренингов</h3>
+                  <h3 className="text-lg font-bold text-white mb-4 flex-shrink-0">Этапы программы</h3>
                   <div className="space-y-2 overflow-y-auto flex-1 pr-2">
                     {content.map((page, index) => (
                       <button
                         key={page.id}
-                        onClick={() => {
-                          setSelectedPage(page);
-                          window.scrollTo({ top: 0, behavior: 'smooth' });
-                        }}
-                        className={`w-full text-left p-3 rounded-lg transition-colors ${
+                        onClick={() => setSelectedPage(page)}
+                        className={`w-full text-left p-4 rounded-lg transition-all duration-200 border ${
                           selectedPage?.id === page.id
-                            ? 'bg-amber-500/30 text-white'
-                            : 'text-slate-300 hover:bg-slate-700/50 hover:text-white'
+                            ? 'bg-gradient-to-r from-amber-500/30 to-orange-500/30 border-amber-500/50 text-white shadow-lg'
+                            : 'bg-slate-700/30 border-slate-600/30 text-slate-300 hover:bg-slate-700/50 hover:border-amber-500/30 hover:text-white'
                         }`}
                       >
-                        <div className="flex items-center gap-2">
-                          <span className="flex items-center justify-center w-6 h-6 rounded-full bg-amber-500/30 text-xs font-bold">
+                        <div className="flex items-start gap-3">
+                          <div className={`flex items-center justify-center w-8 h-8 rounded-full font-bold text-sm flex-shrink-0 ${
+                            selectedPage?.id === page.id
+                              ? 'bg-amber-500 text-white'
+                              : 'bg-slate-600/50 text-slate-400'
+                          }`}>
                             {index + 1}
-                          </span>
-                          <span className="text-sm">{page.title}</span>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className={`text-sm font-semibold leading-tight ${
+                              selectedPage?.id === page.id ? 'text-white' : 'text-slate-300'
+                            }`}>
+                              {page.title.replace('Этап ' + (index + 1) + ': ', '')}
+                            </p>
+                          </div>
                         </div>
                       </button>
                     ))}

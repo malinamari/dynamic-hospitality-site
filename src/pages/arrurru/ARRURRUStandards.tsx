@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
 import { getCurrentUser, logout } from '@/lib/arrurru-auth';
+import ReportErrorButton from '@/components/ReportErrorButton';
 import { getContentBySection, ContentPage } from '@/lib/arrurru-content';
 import ReactMarkdown from 'react-markdown';
 
@@ -55,6 +56,7 @@ const ARRURRUStandards = () => {
               </div>
             </div>
             <div className="flex items-center gap-4">
+              <ReportErrorButton pageName="Стандарты" />
               <div className="text-right hidden sm:block">
                 <p className="text-sm font-medium text-white">{user.fullName}</p>
               </div>

@@ -7,6 +7,7 @@ import { getCurrentUser, logout } from '@/lib/arrurru-auth';
 import { getUserProgress, getContentBySection, loadContent, isAllExamsCompleted, requestCertificate, hasCertificateRequest } from '@/lib/arrurru-content';
 import { useState } from 'react';
 import ProgressBadge from '@/components/ProgressBadge';
+import ReportErrorButton from '@/components/ReportErrorButton';
 
 const sections = [
   {
@@ -105,7 +106,8 @@ const ARRURRUDashboard = () => {
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <div className="text-right">
+              <ReportErrorButton pageName="Главная панель" />
+              <div className="text-right hidden sm:block">
                 <p className="text-sm font-medium text-white">{user.fullName}</p>
                 <p className="text-xs text-slate-400">{user.email}</p>
               </div>

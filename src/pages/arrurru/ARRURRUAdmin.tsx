@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
 import { getCurrentUser, logout, createInvitation, User } from '@/lib/arrurru-auth';
+import ReportErrorButton from '@/components/ReportErrorButton';
 import { loadContent, saveContent, deleteContent, ContentPage, getUserProgress } from '@/lib/arrurru-content';
 import { getAllUsers } from '@/lib/arrurru-users';
 import StatisticsTab from '@/components/admin/StatisticsTab';
@@ -222,6 +223,7 @@ const ARRURRUAdmin = () => {
               </div>
             </div>
             <div className="flex items-center gap-4">
+              <ReportErrorButton pageName="Админ-панель" />
               <div className="text-right hidden sm:block">
                 <p className="text-sm font-medium text-white">{user.fullName}</p>
               </div>

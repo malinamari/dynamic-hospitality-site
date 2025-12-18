@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
 import { getCurrentUser, logout } from '@/lib/arrurru-auth';
+import ReportErrorButton from '@/components/ReportErrorButton';
 import { getContentBySection, ContentPage, getUserProgress } from '@/lib/arrurru-content';
 import { getTrainingHallTestQuestions } from '@/lib/arrurru-training-hall-content';
 import ReactMarkdown from 'react-markdown';
@@ -80,6 +81,7 @@ const ARRURRUTrainingHall = () => {
               </div>
             </div>
             <div className="flex items-center gap-4">
+              <ReportErrorButton pageName="Обучение зала" />
               <div className="text-right hidden sm:block">
                 <p className="text-sm font-medium text-white">{user.fullName}</p>
               </div>
