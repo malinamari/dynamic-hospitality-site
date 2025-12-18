@@ -14,7 +14,7 @@ const UsersTab = ({ allUsers, handleDeleteUser }: UsersTabProps) => {
       <CardContent className="p-6">
         <h2 className="text-2xl font-bold text-white mb-6">Управление пользователями</h2>
 
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto max-h-[600px] overflow-y-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-slate-600">
