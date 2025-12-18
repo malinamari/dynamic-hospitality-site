@@ -170,7 +170,7 @@ const ARRURRUTrainings = () => {
               {selectedPage ? (
                 <Card className="bg-slate-800/50 backdrop-blur-sm border-2 border-amber-500/30">
                   <CardContent className="p-8">
-                    <article className="prose prose-invert prose-amber max-w-none">
+                    <article className="prose prose-invert prose-amber max-w-none prose-headings:text-white prose-p:text-slate-200 prose-li:text-slate-200 prose-strong:text-amber-300 prose-blockquote:text-amber-200 prose-blockquote:border-amber-500">
                       <ReactMarkdown>{selectedPage.content}</ReactMarkdown>
                     </article>
 
