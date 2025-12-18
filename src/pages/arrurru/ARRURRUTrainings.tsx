@@ -87,9 +87,9 @@ const ARRURRUTrainings = () => {
                       <div className="p-4 bg-slate-800/50 rounded-lg border border-amber-500/20">
                         <div className="flex items-center gap-3 mb-2">
                           <div className="flex items-center justify-center w-8 h-8 rounded-full bg-amber-500/20 text-amber-400 font-bold text-sm">1</div>
-                          <h3 className="font-bold text-white">Командообразование (2 дня)</h3>
+                          <h3 className="font-bold text-white">День первый</h3>
                         </div>
-                        <p className="text-sm text-slate-300 ml-11">Весь персонал — создание команды через игры, формирование ценностей, запуск ритуалов и геймификации. Лучше закрыть ресторан или провести в выходные.</p>
+                        <p className="text-sm text-slate-300 ml-11">Весь персонал — создание команды через игры, формирование ценностей, запуск ритуалов и геймификации.</p>
                       </div>
 
                       <div className="p-4 bg-slate-800/50 rounded-lg border border-blue-500/20">
