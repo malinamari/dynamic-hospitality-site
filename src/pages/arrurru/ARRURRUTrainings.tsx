@@ -139,7 +139,7 @@ const ARRURRUTrainings = () => {
 
           <div className="grid lg:grid-cols-4 gap-6">
             <aside className="lg:col-span-1">
-              <Card className="bg-slate-800/90 backdrop-blur-sm border-2 border-amber-500/30 sticky top-24 max-h-[calc(100vh-7rem)] overflow-hidden flex flex-col shadow-xl">
+              <Card className="bg-slate-800/50 backdrop-blur-sm border-2 border-amber-500/30 sticky top-24 max-h-[calc(100vh-7rem)] overflow-hidden flex flex-col">
                 <CardContent className="p-4 flex flex-col overflow-hidden">
                   <h3 className="text-lg font-bold text-white mb-4 flex-shrink-0">Этапы программы</h3>
                   <div className="space-y-2 overflow-y-auto flex-1 pr-2">
@@ -147,27 +147,17 @@ const ARRURRUTrainings = () => {
                       <button
                         key={page.id}
                         onClick={() => setSelectedPage(page)}
-                        className={`w-full text-left p-4 rounded-lg transition-all duration-200 border ${
+                        className={`w-full text-left p-3 rounded-lg transition-colors ${
                           selectedPage?.id === page.id
-                            ? 'bg-gradient-to-r from-amber-500/40 to-orange-500/40 border-amber-500 text-white shadow-lg'
-                            : 'bg-slate-700/70 border-slate-600/50 text-slate-200 hover:bg-slate-700/90 hover:border-amber-500/50 hover:text-white'
+                            ? 'bg-amber-500/30 text-white'
+                            : 'text-slate-300 hover:bg-slate-700/50 hover:text-white'
                         }`}
                       >
-                        <div className="flex items-start gap-3">
-                          <div className={`flex items-center justify-center w-8 h-8 rounded-full font-bold text-sm flex-shrink-0 ${
-                            selectedPage?.id === page.id
-                              ? 'bg-amber-500 text-white'
-                              : 'bg-slate-600 text-slate-200'
-                          }`}>
+                        <div className="flex items-center gap-2">
+                          <span className="flex items-center justify-center w-6 h-6 rounded-full bg-amber-500/30 text-xs font-bold">
                             {index + 1}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className={`text-sm font-semibold leading-tight ${
-                              selectedPage?.id === page.id ? 'text-white' : 'text-slate-200'
-                            }`}>
-                              {page.title.replace('Этап ' + (index + 1) + ': ', '')}
-                            </p>
-                          </div>
+                          </span>
+                          <span className="text-sm">{page.title.replace('Этап ' + (index + 1) + ': ', '')}</span>
                         </div>
                       </button>
                     ))}
