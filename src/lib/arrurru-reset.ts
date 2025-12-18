@@ -12,7 +12,17 @@ export const resetARRURRUData = () => {
   window.location.reload();
 };
 
-// Вызови эту функцию в консоли браузера: resetARRURRUData()
+// Функция для перезагрузки только контента (без удаления пользователей)
+export const reloadContent = () => {
+  localStorage.removeItem('arrurru_content');
+  console.log('📚 ARRURRU content reloaded!');
+  window.location.reload();
+};
+
+// Вызови эти функции в консоли браузера:
+// resetARRURRUData() - полный сброс
+// reloadContent() - только перезагрузка контента
 if (typeof window !== 'undefined') {
   (window as any).resetARRURRUData = resetARRURRUData;
+  (window as any).reloadContent = reloadContent;
 }
