@@ -23,7 +23,7 @@ export const reloadContent = () => {
 // Функция для принудительной очистки при загрузке (если версия устарела)
 export const forceContentUpdate = () => {
   const CONTENT_VERSION_KEY = 'arrurru_content_version';
-  const CURRENT_VERSION = '9.0';
+  const CURRENT_VERSION = '10.0';
   const storedVersion = localStorage.getItem(CONTENT_VERSION_KEY);
   
   if (storedVersion !== CURRENT_VERSION) {
