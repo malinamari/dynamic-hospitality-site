@@ -43,18 +43,18 @@ const ContentTab = ({
   return (
     <div className="grid lg:grid-cols-4 gap-6">
       <aside className="lg:col-span-1">
-        <Card className="bg-slate-800/50 backdrop-blur-sm border-2 border-orange-500/30 sticky top-24">
-          <CardContent className="p-4">
+        <Card className="bg-slate-800/50 backdrop-blur-sm border-2 border-orange-500/30 sticky top-24 max-h-[calc(100vh-7rem)] overflow-hidden flex flex-col">
+          <CardContent className="p-4 flex flex-col overflow-hidden">
             <Button
               onClick={handleNewContent}
-              className="w-full bg-orange-500 hover:bg-orange-600 mb-4"
+              className="w-full bg-orange-500 hover:bg-orange-600 mb-4 flex-shrink-0"
             >
               <Icon name="Plus" size={20} className="mr-2" />
               Новая страница
             </Button>
 
-            <h3 className="text-lg font-bold text-white mb-4">Страницы</h3>
-            <div className="space-y-2">
+            <h3 className="text-lg font-bold text-white mb-4 flex-shrink-0">Страницы</h3>
+            <div className="space-y-2 overflow-y-auto flex-1 pr-2">
               {content.map((page) => (
                 <button
                   key={page.id}
