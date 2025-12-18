@@ -9,11 +9,12 @@ import StatisticsTab from '@/components/admin/StatisticsTab';
 import ContentTab from '@/components/admin/ContentTab';
 import InvitesTab from '@/components/admin/InvitesTab';
 import UsersTab from '@/components/admin/UsersTab';
+import CertificatesTab from '@/components/admin/CertificatesTab';
 
 const ARRURRUAdmin = () => {
   const navigate = useNavigate();
   const user = getCurrentUser();
-  const [activeTab, setActiveTab] = useState<'statistics' | 'content' | 'invites' | 'users'>('statistics');
+  const [activeTab, setActiveTab] = useState<'statistics' | 'content' | 'invites' | 'users' | 'certificates'>('statistics');
   
   const [content, setContent] = useState<ContentPage[]>([]);
   const [selectedContent, setSelectedContent] = useState<ContentPage | null>(null);
@@ -30,6 +31,7 @@ const ARRURRUAdmin = () => {
   const [inviteEmail, setInviteEmail] = useState('');
   const [adminPassword, setAdminPassword] = useState('');
   const [inviteUrl, setInviteUrl] = useState('');
+  const [generatedPassword, setGeneratedPassword] = useState('');
   const [message, setMessage] = useState('');
   const [allUsers, setAllUsers] = useState<(User & { passwordHash: string; createdAt?: string })[]>([]);
   const [selectedUser, setSelectedUser] = useState<(User & { passwordHash: string; createdAt?: string }) | null>(null);
@@ -178,6 +180,7 @@ const ARRURRUAdmin = () => {
     
     if (result.success) {
       setInviteUrl(result.inviteUrl || '');
+      setGeneratedPassword(result.password || '');
       setMessage('Приглашение создано!');
       setInviteEmail('');
       setAdminPassword('');
@@ -276,6 +279,14 @@ const ARRURRUAdmin = () => {
               <Icon name="Users" size={20} className="mr-2" />
               Пользователи
             </Button>
+            <Button
+              onClick={() => setActiveTab('certificates')}
+              variant={activeTab === 'certificates' ? 'default' : 'ghost'}
+              className={activeTab === 'certificates' ? 'bg-orange-500' : 'text-slate-300'}
+            >
+              <Icon name="Award" size={20} className="mr-2" />
+              Сертификаты
+            </Button>
           </div>
 
           {activeTab === 'statistics' && (
@@ -312,6 +323,7 @@ const ARRURRUAdmin = () => {
               adminPassword={adminPassword}
               setAdminPassword={setAdminPassword}
               inviteUrl={inviteUrl}
+              generatedPassword={generatedPassword}
               handleCreateInvite={handleCreateInvite}
               copyToClipboard={copyToClipboard}
             />
@@ -322,6 +334,10 @@ const ARRURRUAdmin = () => {
               allUsers={allUsers}
               handleDeleteUser={handleDeleteUser}
             />
+          )}
+
+          {activeTab === 'certificates' && (
+            <CertificatesTab />
           )}
         </div>
       </div>

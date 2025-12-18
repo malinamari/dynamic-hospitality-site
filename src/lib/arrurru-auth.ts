@@ -33,7 +33,13 @@ export const generateToken = (): string => {
   return crypto.randomUUID();
 };
 
-export const createInvitation = async (email: string, adminPassword: string): Promise<{ success: boolean; inviteUrl?: string; error?: string }> => {
+export const generatePasswordFromEmail = (email: string): string => {
+  const emailPart = email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g, '');
+  const randomNum = Math.floor(Math.random() * 900) + 100;
+  return `${emailPart}${randomNum}arrurru`;
+};
+
+export const createInvitation = async (email: string, adminPassword: string): Promise<{ success: boolean; inviteUrl?: string; password?: string; error?: string }> => {
   if (adminPassword !== ADMIN_PASSWORD) {
     return { success: false, error: 'Неверный пароль администратора' };
   }
@@ -43,6 +49,7 @@ export const createInvitation = async (email: string, adminPassword: string): Pr
   const existingIndex = invitations.findIndex(inv => inv.email === email.toLowerCase());
   
   const token = generateToken();
+  const generatedPassword = generatePasswordFromEmail(email);
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
   
   const newInvitation: Invitation = {
@@ -61,7 +68,7 @@ export const createInvitation = async (email: string, adminPassword: string): Pr
   
   const inviteUrl = `${window.location.origin}/arrurru/register?token=${token}`;
   
-  return { success: true, inviteUrl };
+  return { success: true, inviteUrl, password: generatedPassword };
 };
 
 export const register = async (token: string, email: string, password: string, fullName: string, projectName?: string): Promise<{ success: boolean; user?: User; error?: string }> => {

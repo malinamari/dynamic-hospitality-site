@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
 import { getCurrentUser, logout } from '@/lib/arrurru-auth';
-import { getUserProgress, getContentBySection, loadContent } from '@/lib/arrurru-content';
+import { getUserProgress, getContentBySection, loadContent, isAllExamsCompleted, requestCertificate, hasCertificateRequest } from '@/lib/arrurru-content';
 import { useState } from 'react';
 import ProgressBadge from '@/components/ProgressBadge';
 
@@ -47,6 +47,9 @@ const ARRURRUDashboard = () => {
   const navigate = useNavigate();
   const user = getCurrentUser();
   const [userProgress] = useState(() => user ? getUserProgress(user.id) : []);
+  const [certificateMessage, setCertificateMessage] = useState('');
+  const allExamsCompleted = user ? isAllExamsCompleted(user.id) : false;
+  const hasCertRequest = user ? hasCertificateRequest(user.id) : false;
 
   useEffect(() => {
     if (!user) {
@@ -59,6 +62,21 @@ const ARRURRUDashboard = () => {
   const handleLogout = () => {
     logout();
     navigate('/arrurru/login');
+  };
+
+  const handleRequestCertificate = () => {
+    if (!user) return;
+    
+    const result = requestCertificate(user.id, user.fullName, user.email);
+    
+    if (result.success) {
+      setCertificateMessage('Запрос на сертификат отправлен! Управляющий рассмотрит его в ближайшее время.');
+      setTimeout(() => setCertificateMessage(''), 5000);
+      window.location.reload();
+    } else {
+      setCertificateMessage(result.error || 'Ошибка при отправке запроса');
+      setTimeout(() => setCertificateMessage(''), 3000);
+    }
   };
 
   if (!user) return null;
@@ -186,6 +204,56 @@ const ARRURRUDashboard = () => {
             {/* Достижения */}
             {userProgress.length > 0 && (
               <ProgressBadge userProgress={userProgress} />
+            )}
+            
+            {/* Запрос сертификата */}
+            {allExamsCompleted && !hasCertRequest && (
+              <Card className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm border-2 border-green-500/50 mt-6">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-4">
+                    <div className="p-4 bg-green-500/20 rounded-full">
+                      <Icon name="Award" size={40} className="text-green-400" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-2xl font-bold text-white mb-2">Поздравляем! 🎉</h3>
+                      <p className="text-slate-300 mb-4">
+                        Вы успешно прошли все экзамены! Теперь вы можете запросить сертификат об окончании обучения ARRURRU.
+                      </p>
+                      <Button
+                        onClick={handleRequestCertificate}
+                        className="bg-green-600 hover:bg-green-700 text-white"
+                      >
+                        <Icon name="Award" size={20} className="mr-2" />
+                        Запросить сертификат
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+            
+            {hasCertRequest && (
+              <Card className="bg-gradient-to-r from-amber-500/20 to-orange-500/20 backdrop-blur-sm border-2 border-amber-500/50 mt-6">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-4">
+                    <div className="p-4 bg-amber-500/20 rounded-full">
+                      <Icon name="Clock" size={40} className="text-amber-400" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-xl font-bold text-white mb-2">Запрос отправлен</h3>
+                      <p className="text-slate-300">
+                        Ваш запрос на получение сертификата находится на рассмотрении. Управляющий свяжется с вами в ближайшее время.
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+            
+            {certificateMessage && (
+              <div className="fixed top-24 right-6 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50">
+                {certificateMessage}
+              </div>
             )}
           </div>
 

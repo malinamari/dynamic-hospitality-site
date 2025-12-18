@@ -9,6 +9,7 @@ interface InvitesTabProps {
   adminPassword: string;
   setAdminPassword: (password: string) => void;
   inviteUrl: string;
+  generatedPassword?: string;
   handleCreateInvite: () => void;
   copyToClipboard: (text: string) => void;
 }
@@ -19,6 +20,7 @@ const InvitesTab = ({
   adminPassword,
   setAdminPassword,
   inviteUrl,
+  generatedPassword,
   handleCreateInvite,
   copyToClipboard
 }: InvitesTabProps) => {
@@ -63,21 +65,43 @@ const InvitesTab = ({
           </Button>
 
           {inviteUrl && (
-            <div className="mt-6 p-4 bg-green-500/20 rounded-lg border border-green-500/50">
-              <p className="text-sm text-green-300 mb-2">Приглашение создано!</p>
-              <div className="flex gap-2">
-                <Input
-                  value={inviteUrl}
-                  readOnly
-                  className="bg-slate-700 text-white border-slate-600 flex-1"
-                />
-                <Button
-                  onClick={() => copyToClipboard(inviteUrl)}
-                  className="bg-green-600 hover:bg-green-700"
-                >
-                  <Icon name="Copy" size={20} />
-                </Button>
+            <div className="mt-6 p-4 bg-green-500/20 rounded-lg border border-green-500/50 space-y-4">
+              <div>
+                <p className="text-sm text-green-300 mb-2">Ссылка-приглашение:</p>
+                <div className="flex gap-2">
+                  <Input
+                    value={inviteUrl}
+                    readOnly
+                    className="bg-slate-700 text-white border-slate-600 flex-1 text-sm"
+                  />
+                  <Button
+                    onClick={() => copyToClipboard(inviteUrl)}
+                    className="bg-green-600 hover:bg-green-700"
+                  >
+                    <Icon name="Copy" size={20} />
+                  </Button>
+                </div>
               </div>
+              
+              {generatedPassword && (
+                <div>
+                  <p className="text-sm text-green-300 mb-2">Сгенерированный пароль:</p>
+                  <div className="flex gap-2">
+                    <Input
+                      value={generatedPassword}
+                      readOnly
+                      className="bg-slate-700 text-white border-slate-600 flex-1 font-mono text-lg"
+                    />
+                    <Button
+                      onClick={() => copyToClipboard(generatedPassword)}
+                      className="bg-green-600 hover:bg-green-700"
+                    >
+                      <Icon name="Copy" size={20} />
+                    </Button>
+                  </div>
+                  <p className="text-xs text-slate-400 mt-2">Отправьте этот пароль сотруднику вместе со ссылкой</p>
+                </div>
+              )}
             </div>
           )}
         </div>

@@ -8,8 +8,6 @@ import { getAllUsers } from '@/lib/arrurru-users';
 
 interface ProjectStats {
   totalUsers: number;
-  completedExams: number;
-  avgScore: number;
 }
 
 const ARRURRUProjectSelect = () => {
@@ -35,34 +33,10 @@ const ARRURRUProjectSelect = () => {
     });
 
     const projectList = Array.from(projectMap.entries()).map(([name, users]) => {
-      const progressKey = 'arrurru_progress';
-      const progressData = localStorage.getItem(progressKey);
-      let totalCompleted = 0;
-      let totalScore = 0;
-      let scoreCount = 0;
-
-      if (progressData) {
-        try {
-          const allProgress = JSON.parse(progressData);
-          users.forEach(u => {
-            const userProgress = allProgress.filter((p: any) => p.userId === u.id);
-            totalCompleted += userProgress.filter((p: any) => p.completed).length;
-            userProgress.forEach((p: any) => {
-              if (p.examScore) {
-                totalScore += p.examScore;
-                scoreCount++;
-              }
-            });
-          });
-        } catch {}
-      }
-
       return {
         name,
         stats: {
-          totalUsers: users.length,
-          completedExams: totalCompleted,
-          avgScore: scoreCount > 0 ? Math.round(totalScore / scoreCount) : 0
+          totalUsers: users.length
         }
       };
     });
@@ -130,14 +104,6 @@ const ARRURRUProjectSelect = () => {
                       <div className="flex items-center justify-between text-slate-300">
                         <span>Сотрудников:</span>
                         <span className="font-bold text-white">{project.stats.totalUsers}</span>
-                      </div>
-                      <div className="flex items-center justify-between text-slate-300">
-                        <span>Пройдено экзаменов:</span>
-                        <span className="font-bold text-white">{project.stats.completedExams}</span>
-                      </div>
-                      <div className="flex items-center justify-between text-slate-300">
-                        <span>Средний балл:</span>
-                        <span className="font-bold text-amber-400">{project.stats.avgScore}%</span>
                       </div>
                     </div>
                   </div>

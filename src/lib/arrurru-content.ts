@@ -258,3 +258,62 @@ export const getAllProgress = (): UserProgress[] => {
     return [];
   }
 };
+
+export const isAllExamsCompleted = (userId: string): boolean => {
+  const userProgress = getUserProgress(userId);
+  const allContent = loadContent();
+  const examsContent = allContent.filter(page => page.hasExam);
+  
+  if (examsContent.length === 0) return false;
+  
+  const completedExams = userProgress.filter(p => p.completed && (p.examScore || 0) >= 80);
+  
+  return completedExams.length >= examsContent.length;
+};
+
+interface CertificateRequest {
+  userId: string;
+  userName: string;
+  userEmail: string;
+  requestedAt: string;
+  approved: boolean;
+}
+
+const CERTIFICATE_REQUESTS_KEY = 'arrurru_certificate_requests';
+
+export const requestCertificate = (userId: string, userName: string, userEmail: string): { success: boolean; error?: string } => {
+  if (!isAllExamsCompleted(userId)) {
+    return { success: false, error: 'Необходимо пройти все экзамены с результатом 80% и выше' };
+  }
+  
+  const stored = localStorage.getItem(CERTIFICATE_REQUESTS_KEY);
+  const requests: CertificateRequest[] = stored ? JSON.parse(stored) : [];
+  
+  const existingRequest = requests.find(r => r.userId === userId);
+  if (existingRequest) {
+    return { success: false, error: 'Вы уже отправили запрос на сертификат' };
+  }
+  
+  const newRequest: CertificateRequest = {
+    userId,
+    userName,
+    userEmail,
+    requestedAt: new Date().toISOString(),
+    approved: false
+  };
+  
+  requests.push(newRequest);
+  localStorage.setItem(CERTIFICATE_REQUESTS_KEY, JSON.stringify(requests));
+  
+  return { success: true };
+};
+
+export const getCertificateRequests = (): CertificateRequest[] => {
+  const stored = localStorage.getItem(CERTIFICATE_REQUESTS_KEY);
+  return stored ? JSON.parse(stored) : [];
+};
+
+export const hasCertificateRequest = (userId: string): boolean => {
+  const requests = getCertificateRequests();
+  return requests.some(r => r.userId === userId);
+};
