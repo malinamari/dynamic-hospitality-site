@@ -28,11 +28,13 @@ import ARRURRUTrainings from "./pages/arrurru/ARRURRUTrainings";
 import ARRURRUStandards from "./pages/arrurru/ARRURRUStandards";
 import ARRURRUAdmin from "./pages/arrurru/ARRURRUAdmin";
 import { initializeDemoData } from "./lib/arrurru-users";
+import { forceContentUpdate } from "./lib/arrurru-reset";
 import "./lib/arrurru-reset";
 
 const queryClient = new QueryClient();
 
 initializeDemoData();
+forceContentUpdate();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>

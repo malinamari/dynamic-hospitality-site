@@ -123,9 +123,19 @@ const ARRURRUCodeice = () => {
             <main className="lg:col-span-3">
               {selectedPage ? (
                 <Card className="bg-slate-800/50 backdrop-blur-sm border-2 border-purple-500/30">
-                  <CardContent className="p-8">
-                    <article className="prose prose-invert prose-amber max-w-none">
-                      <ReactMarkdown>{selectedPage.content}</ReactMarkdown>
+                  <CardContent className="p-8 lg:p-12">
+                    <article className="prose prose-invert prose-lg prose-amber max-w-none">
+                      <ReactMarkdown 
+                        components={{
+                          p: ({children}) => <p className="text-slate-200 leading-relaxed mb-6">{children}</p>,
+                          h1: ({children}) => <h1 className="text-3xl lg:text-4xl font-bold text-amber-400 mb-6">{children}</h1>,
+                          h2: ({children}) => <h2 className="text-2xl lg:text-3xl font-bold text-purple-300 mb-4 mt-8">{children}</h2>,
+                          h3: ({children}) => <h3 className="text-xl lg:text-2xl font-semibold text-purple-200 mb-3 mt-6">{children}</h3>,
+                          strong: ({children}) => <strong className="text-amber-300 font-semibold">{children}</strong>,
+                        }}
+                      >
+                        {selectedPage.content}
+                      </ReactMarkdown>
                     </article>
 
                     <ImageGallery files={selectedPage.files} />
@@ -193,6 +203,44 @@ const ARRURRUCodeice = () => {
                         )}
                       </div>
                     )}
+
+                    <div className="mt-8 pt-8 border-t border-slate-700">
+                      <div className="flex justify-between items-center">
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            const currentIndex = content.findIndex(p => p.id === selectedPage.id);
+                            if (currentIndex > 0) {
+                              setSelectedPage(content[currentIndex - 1]);
+                              setShowExam(false);
+                              window.scrollTo({ top: 0, behavior: 'smooth' });
+                            }
+                          }}
+                          disabled={content.findIndex(p => p.id === selectedPage.id) === 0}
+                          className="text-amber-400 border-amber-500/50 hover:bg-amber-500/20"
+                        >
+                          <Icon name="ChevronLeft" size={20} className="mr-2" />
+                          Предыдущая глава
+                        </Button>
+                        
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            const currentIndex = content.findIndex(p => p.id === selectedPage.id);
+                            if (currentIndex < content.length - 1) {
+                              setSelectedPage(content[currentIndex + 1]);
+                              setShowExam(false);
+                              window.scrollTo({ top: 0, behavior: 'smooth' });
+                            }
+                          }}
+                          disabled={content.findIndex(p => p.id === selectedPage.id) === content.length - 1}
+                          className="text-amber-400 border-amber-500/50 hover:bg-amber-500/20"
+                        >
+                          Следующая глава
+                          <Icon name="ChevronRight" size={20} className="ml-2" />
+                        </Button>
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
               ) : (
