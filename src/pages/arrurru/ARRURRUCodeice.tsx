@@ -97,10 +97,10 @@ const ARRURRUCodeice = () => {
         <div className="container mx-auto max-w-7xl">
           <div className="grid lg:grid-cols-4 gap-6">
             <aside className="lg:col-span-1">
-              <Card className="bg-slate-800/50 backdrop-blur-sm border-2 border-purple-500/30 sticky top-24">
-                <CardContent className="p-4">
-                  <h3 className="text-lg font-bold text-white mb-4">Оглавление</h3>
-                  <div className="space-y-2">
+              <Card className="bg-slate-800/50 backdrop-blur-sm border-2 border-purple-500/30 sticky top-24 max-h-[calc(100vh-7rem)] overflow-hidden flex flex-col">
+                <CardContent className="p-4 flex flex-col overflow-hidden">
+                  <h3 className="text-lg font-bold text-white mb-4 flex-shrink-0">Оглавление</h3>
+                  <div className="space-y-2 overflow-y-auto flex-1 pr-2">
                     {content.map((page) => {
                       const pageProgress = userProgress.find(p => p.contentId === page.id);
                       const isCompleted = pageProgress?.completed || false;

@@ -126,10 +126,10 @@ const ARRURRUTrainingHall = () => {
           ) : (
           <div className="grid lg:grid-cols-4 gap-6">
             <aside className="lg:col-span-1">
-              <Card className="bg-slate-800/50 backdrop-blur-sm border-2 border-blue-500/30 sticky top-24">
-                <CardContent className="p-4">
-                  <h3 className="text-lg font-bold text-white mb-4">Модули обучения</h3>
-                  <div className="space-y-2">
+              <Card className="bg-slate-800/50 backdrop-blur-sm border-2 border-blue-500/30 sticky top-24 max-h-[calc(100vh-7rem)] overflow-hidden flex flex-col">
+                <CardContent className="p-4 flex flex-col overflow-hidden">
+                  <h3 className="text-lg font-bold text-white mb-4 flex-shrink-0">Модули обучения</h3>
+                  <div className="space-y-2 overflow-y-auto flex-1 pr-2">
                     {content.map((page, index) => {
                       const pageProgress = userProgress.find(p => p.contentId === page.id);
                       const isCompleted = pageProgress?.completed || false;

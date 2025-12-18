@@ -96,10 +96,10 @@ const ARRURRUTrainings = () => {
 
           <div className="grid lg:grid-cols-4 gap-6">
             <aside className="lg:col-span-1">
-              <Card className="bg-slate-800/50 backdrop-blur-sm border-2 border-amber-500/30 sticky top-24">
-                <CardContent className="p-4">
-                  <h3 className="text-lg font-bold text-white mb-4">Список тренингов</h3>
-                  <div className="space-y-2">
+              <Card className="bg-slate-800/50 backdrop-blur-sm border-2 border-amber-500/30 sticky top-24 max-h-[calc(100vh-7rem)] overflow-hidden flex flex-col">
+                <CardContent className="p-4 flex flex-col overflow-hidden">
+                  <h3 className="text-lg font-bold text-white mb-4 flex-shrink-0">Список тренингов</h3>
+                  <div className="space-y-2 overflow-y-auto flex-1 pr-2">
                     {content.map((page, index) => (
                       <button
                         key={page.id}
