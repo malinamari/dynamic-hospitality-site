@@ -173,9 +173,50 @@ const ARRURRUTrainingHall = () => {
             <main className="lg:col-span-3">
               {selectedPage ? (
                 <Card className="bg-slate-800/50 backdrop-blur-sm border-2 border-blue-500/30">
-                  <CardContent className="p-8">
-                    <article className="prose prose-invert prose-amber max-w-none">
-                      <ReactMarkdown>{selectedPage.content}</ReactMarkdown>
+                  <CardContent className="p-8 lg:p-16">
+                    <article className="prose prose-invert max-w-none">
+                      <ReactMarkdown
+                        components={{
+                          p: ({children}) => <p className="text-slate-200 leading-loose mb-6 text-base lg:text-lg font-light">{children}</p>,
+                          h1: ({children}) => <h1 className="font-serif text-5xl lg:text-6xl font-bold text-blue-400 mb-8 tracking-tight">{children}</h1>,
+                          h2: ({children}) => <h2 className="font-serif text-3xl lg:text-4xl font-bold text-amber-300 mb-6 mt-12 tracking-tight">{children}</h2>,
+                          h3: ({children}) => <h3 className="text-2xl lg:text-3xl font-semibold text-blue-300 mb-4 mt-10">{children}</h3>,
+                          h4: ({children}) => <h4 className="text-xl lg:text-2xl font-semibold text-amber-200 mb-3 mt-8 italic">{children}</h4>,
+                          strong: ({children}) => <strong className="text-blue-300 font-bold">{children}</strong>,
+                          em: ({children}) => <em className="text-amber-300 font-medium not-italic">{children}</em>,
+                          blockquote: ({children}) => (
+                            <blockquote className="border-l-4 border-blue-500 pl-6 my-8 italic text-blue-200 text-lg lg:text-xl font-light">
+                              {children}
+                            </blockquote>
+                          ),
+                          ul: ({children}) => <ul className="space-y-3 my-6 list-none">{children}</ul>,
+                          li: ({children}) => (
+                            <li className="flex items-start gap-3 text-slate-200 text-base lg:text-lg">
+                              <span className="text-blue-500 mt-1">●</span>
+                              <span>{children}</span>
+                            </li>
+                          ),
+                          hr: () => <hr className="border-blue-500/30 my-12" />,
+                          table: ({children}) => (
+                            <div className="overflow-x-auto my-8">
+                              <table className="w-full border-collapse">{children}</table>
+                            </div>
+                          ),
+                          thead: ({children}) => <thead className="bg-blue-500/20">{children}</thead>,
+                          th: ({children}) => <th className="border border-blue-500/30 px-4 py-3 text-left text-blue-300 font-bold">{children}</th>,
+                          td: ({children}) => <td className="border border-blue-500/30 px-4 py-3 text-slate-200">{children}</td>,
+                          code: ({children}) => (
+                            <code className="bg-slate-900/50 px-2 py-1 rounded text-amber-300 text-sm">{children}</code>
+                          ),
+                          pre: ({children}) => (
+                            <pre className="bg-slate-900/80 p-6 rounded-lg overflow-x-auto my-6 border border-blue-500/30">
+                              {children}
+                            </pre>
+                          )
+                        }}
+                      >
+                        {selectedPage.content}
+                      </ReactMarkdown>
                     </article>
 
                     <ImageGallery files={selectedPage.files} />
