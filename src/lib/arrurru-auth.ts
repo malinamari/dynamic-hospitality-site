@@ -148,7 +148,7 @@ export const login = async (email: string, password: string): Promise<{ success:
   // Поиск пользователя: либо по его паролю, либо по универсальному
   const user = users.find(u => 
     u.email === email.toLowerCase() && 
-    (u.passwordHash === passwordHash || universalHash === passwordHash)
+    (u.passwordHash === passwordHash || u.passwordHash === universalHash)
   );
   
   if (!user) {
