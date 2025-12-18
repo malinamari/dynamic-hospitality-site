@@ -5,7 +5,7 @@ export const getTrainingsContent = (): ContentPage[] => {
     {
       id: 'training-1',
       section: 'trainings',
-      title: 'Этап 1: Командообразование (2 дня)',
+      title: 'День первый: Командообразование',
       slug: 'team-building',
       content: `# Командообразование — создание команды ARRURRU
 
