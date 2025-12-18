@@ -5,33 +5,50 @@ import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
 import { getCurrentUser, logout } from '@/lib/arrurru-auth';
 import { getContentBySection, ContentPage, getUserProgress } from '@/lib/arrurru-content';
+import { getTrainingHallTestQuestions } from '@/lib/arrurru-training-hall-content';
 import ReactMarkdown from 'react-markdown';
-import ExamComponent from '@/components/ExamComponent';
+import TestComponent from '@/components/TestComponent';
 import ImageGallery from '@/components/ImageGallery';
+import ProfessionSelector from '@/components/ProfessionSelector';
+import Certificate from '@/components/Certificate';
 
 const ARRURRUTrainingHall = () => {
   const navigate = useNavigate();
   const user = getCurrentUser();
   const [content, setContent] = useState<ContentPage[]>([]);
   const [selectedPage, setSelectedPage] = useState<ContentPage | null>(null);
-  const [showExam, setShowExam] = useState(false);
+  const [selectedProfession, setSelectedProfession] = useState<string>('');
+  const [showTest, setShowTest] = useState(false);
   const [userProgress, setUserProgress] = useState<any[]>([]);
+  const [showCertificate, setShowCertificate] = useState(false);
 
   useEffect(() => {
     if (!user) {
       navigate('/arrurru/login');
       return;
     }
-    const pages = getContentBySection('training-hall');
-    setContent(pages);
-    if (pages.length > 0) {
-      setSelectedPage(pages[0]);
-    }
     if (user) {
       const progress = getUserProgress(user.id);
       setUserProgress(progress);
     }
   }, [user, navigate]);
+
+  useEffect(() => {
+    if (selectedProfession) {
+      const pages = getContentBySection('training-hall').filter(p => 
+        p.parentId === selectedProfession || p.id.startsWith(selectedProfession)
+      );
+      setContent(pages);
+      if (pages.length > 0) {
+        setSelectedPage(pages[0]);
+      }
+    }
+  }, [selectedProfession]);
+
+  const handleProfessionSelect = (professionId: string) => {
+    setSelectedProfession(professionId);
+    setShowCertificate(false);
+  };
 
   const handleLogout = () => {
     logout();
@@ -81,6 +98,32 @@ const ARRURRUTrainingHall = () => {
 
       <div className="pt-24 pb-16 px-6">
         <div className="container mx-auto max-w-7xl">
+          {!selectedProfession ? (
+            <ProfessionSelector 
+              onSelect={handleProfessionSelect}
+              selectedProfession={selectedProfession}
+            />
+          ) : showCertificate && selectedPage ? (
+            <div className="space-y-6">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowCertificate(false);
+                  setSelectedProfession('');
+                }}
+                className="text-amber-400 border-amber-500/50"
+              >
+                <Icon name="ArrowLeft" size={20} className="mr-2" />
+                Назад к выбору профессии
+              </Button>
+              <Certificate
+                userName={user.fullName}
+                profession={selectedProfession}
+                completedAt={new Date().toISOString()}
+                score={userProgress.find(p => p.contentId === selectedPage.id)?.examScore}
+              />
+            </div>
+          ) : (
           <div className="grid lg:grid-cols-4 gap-6">
             <aside className="lg:col-span-1">
               <Card className="bg-slate-800/50 backdrop-blur-sm border-2 border-blue-500/30 sticky top-24">
@@ -166,38 +209,20 @@ const ARRURRUTrainingHall = () => {
                       </div>
                     )}
 
-                    {selectedPage.hasExam && selectedPage.exam && (
+                    {selectedPage.hasExam && (
                       <div className="mt-8 pt-8 border-t border-slate-700">
-                        {!showExam ? (
-                          <div className="text-center">
-                            <h3 className="text-xl font-bold text-white mb-4">Тест по модулю</h3>
-                            <p className="text-slate-300 mb-6">
-                              Проверьте свои знания по пройденному материалу
-                            </p>
-                            <Button
-                              onClick={() => setShowExam(true)}
-                              className="bg-amber-500 hover:bg-amber-600 text-white font-bold"
-                            >
-                              <Icon name="FileCheck" size={20} className="mr-2" />
-                              Пройти тест
-                            </Button>
-                          </div>
-                        ) : (
-                          <ExamComponent
-                            contentId={selectedPage.id}
-                            contentTitle={selectedPage.title}
-                            userId={user.id}
-                            userName={user.fullName}
-                            questions={selectedPage.exam}
-                            onComplete={(passed, score) => {
-                              const progress = getUserProgress(user.id);
-                              setUserProgress(progress);
-                              if (!passed) {
-                                setTimeout(() => setShowExam(false), 3000);
-                              }
-                            }}
-                          />
-                        )}
+                        <TestComponent
+                          contentId={selectedPage.id}
+                          contentTitle={selectedPage.title}
+                          userId={user.id}
+                          userName={user.fullName}
+                          questions={getTrainingHallTestQuestions(selectedPage.id)}
+                          onComplete={() => {
+                            const progress = getUserProgress(user.id);
+                            setUserProgress(progress);
+                            setShowCertificate(true);
+                          }}
+                        />
                       </div>
                     )}
                   </CardContent>
@@ -212,6 +237,7 @@ const ARRURRUTrainingHall = () => {
               )}
             </main>
           </div>
+          )}
         </div>
       </div>
     </div>

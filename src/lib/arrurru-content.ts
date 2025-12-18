@@ -48,17 +48,20 @@ export interface ExamResult {
 }
 
 import { getCodeiceContent } from './arrurru-codice-content';
+import { getAllTrainingHallContent } from './arrurru-training-hall-content';
 
 const STORAGE_KEY = 'arrurru_content';
 const PROGRESS_KEY = 'arrurru_progress';
 const EXAM_RESULTS_KEY = 'arrurru_exam_results';
 const CONTENT_VERSION_KEY = 'arrurru_content_version';
-const CURRENT_CONTENT_VERSION = '6.0';
+const CURRENT_CONTENT_VERSION = '7.0';
 
 const getInitialContent = (): ContentPage[] => {
   const codicePages = getCodeiceContent();
+  const trainingHallPages = getAllTrainingHallContent();
   return [
     ...codicePages,
+    ...trainingHallPages,
     {
       id: '4',
       section: 'training-hall',

@@ -128,6 +128,21 @@ const ARRURRUCodeice = () => {
                         </button>
                       );
                     })}
+                    
+                    {/* Итоговый тест в оглавлении */}
+                    {isLastPage && (
+                      <div className="pt-4 mt-4 border-t border-amber-500/30">
+                        <div className="p-3 bg-amber-500/20 rounded-lg border-2 border-amber-500/50">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Icon name="ClipboardCheck" size={18} className="text-amber-400" />
+                            <span className="text-sm font-bold text-amber-400">Итоговый тест</span>
+                          </div>
+                          <p className="text-xs text-slate-300">
+                            Проверьте свои знания по всему Кодексу
+                          </p>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
