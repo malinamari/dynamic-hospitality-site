@@ -140,7 +140,7 @@ const ARRURRUTrainingHall = () => {
                           key={page.id}
                           onClick={() => {
                             setSelectedPage(page);
-                            setShowExam(false);
+                            setShowTest(false);
                           }}
                           className={`w-full text-left p-3 rounded-lg transition-colors ${
                             selectedPage?.id === page.id
