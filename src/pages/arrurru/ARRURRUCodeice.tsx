@@ -5,15 +5,16 @@ import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
 import { getCurrentUser, logout } from '@/lib/arrurru-auth';
 import { getContentBySection, ContentPage, getUserProgress } from '@/lib/arrurru-content';
+import { getCodeiceTestQuestions } from '@/lib/arrurru-codice-content';
 import ReactMarkdown from 'react-markdown';
-import ExamComponent from '@/components/ExamComponent';
+import TestComponent from '@/components/TestComponent';
 
 const ARRURRUCodeice = () => {
   const navigate = useNavigate();
   const user = getCurrentUser();
   const [content, setContent] = useState<ContentPage[]>([]);
   const [selectedPage, setSelectedPage] = useState<ContentPage | null>(null);
-  const [showExam, setShowExam] = useState(false);
+  const [showTest, setShowTest] = useState(false);
   const [userProgress, setUserProgress] = useState<any[]>([]);
   const [isLastPage, setIsLastPage] = useState(false);
 
@@ -110,7 +111,7 @@ const ARRURRUCodeice = () => {
                           key={page.id}
                           onClick={() => {
                             setSelectedPage(page);
-                            setShowExam(false);
+                            setShowTest(false);
                           }}
                           className={`w-full text-left p-3 rounded-lg transition-colors relative ${
                             selectedPage?.id === page.id
@@ -215,7 +216,7 @@ const ARRURRUCodeice = () => {
                             const currentIndex = content.findIndex(p => p.id === selectedPage.id);
                             if (currentIndex > 0) {
                               setSelectedPage(content[currentIndex - 1]);
-                              setShowExam(false);
+                              setShowTest(false);
                             }
                           }}
                           disabled={content.findIndex(p => p.id === selectedPage.id) === 0}
@@ -231,7 +232,7 @@ const ARRURRUCodeice = () => {
                             const currentIndex = content.findIndex(p => p.id === selectedPage.id);
                             if (currentIndex < content.length - 1) {
                               setSelectedPage(content[currentIndex + 1]);
-                              setShowExam(false);
+                              setShowTest(false);
                             }
                           }}
                           disabled={content.findIndex(p => p.id === selectedPage.id) === content.length - 1}
@@ -243,42 +244,19 @@ const ARRURRUCodeice = () => {
                       </div>
                     </div>
 
-                    {isLastPage && selectedPage.hasExam && selectedPage.exam && (
+                    {isLastPage && (
                       <div className="mt-16 pt-12 border-t-2 border-amber-500/30">
-                        {!showExam ? (
-                          <div className="text-center bg-gradient-to-br from-amber-900/20 to-purple-900/20 rounded-2xl p-12 border-2 border-amber-500/30">
-                            <Icon name="Award" size={64} className="text-amber-400 mx-auto mb-6" />
-                            <h3 className="text-3xl font-bold text-white mb-4">Итоговый экзамен</h3>
-                            <p className="text-slate-300 mb-8 text-lg max-w-2xl mx-auto">
-                              Вы прошли все главы El Códice de ARRURRU. Теперь проверьте свои знания и получите сертификат о прохождении.
-                            </p>
-                            <Button
-                              onClick={() => setShowExam(true)}
-                              size="lg"
-                              className="bg-amber-500 hover:bg-amber-600 text-white font-bold text-lg px-8 py-6"
-                            >
-                              <Icon name="FileCheck" size={24} className="mr-3" />
-                              Начать итоговый экзамен
-                            </Button>
-                          </div>
-                        ) : (
-                          <div className="bg-slate-900/50 rounded-2xl p-8 border-2 border-purple-500/30">
-                            <ExamComponent
-                              contentId={selectedPage.id}
-                              contentTitle="Итоговый экзамен: El Códice de ARRURRU"
-                              userId={user.id}
-                              userName={user.fullName}
-                              questions={selectedPage.exam}
-                              onComplete={(passed, score) => {
-                                const progress = getUserProgress(user.id);
-                                setUserProgress(progress);
-                                if (!passed) {
-                                  setTimeout(() => setShowExam(false), 3000);
-                                }
-                              }}
-                            />
-                          </div>
-                        )}
+                        <TestComponent
+                          contentId={selectedPage.id}
+                          contentTitle="Итоговый тест: El Códice de ARRURRU"
+                          userId={user.id}
+                          userName={user.fullName}
+                          questions={getCodeiceTestQuestions()}
+                          onComplete={() => {
+                            const progress = getUserProgress(user.id);
+                            setUserProgress(progress);
+                          }}
+                        />
                       </div>
                     )}
                   </CardContent>

@@ -1,4 +1,154 @@
 import { ContentPage } from './arrurru-content';
+import { TestQuestion } from './arrurru-test-types';
+
+export const getCodeiceTestQuestions = (): TestQuestion[] => {
+  return [
+    {
+      id: 'test-1',
+      type: 'single',
+      question: 'Для чего создан El Códice de ARRURRU?',
+      options: [
+        'Для объяснения концепции гостям',
+        'Для единого понимания команды о пространстве и работе в нём',
+        'Для производства впечатления на посетителей',
+        'Для рекламы ресторана'
+      ],
+      correctAnswer: 1,
+      required: true
+    },
+    {
+      id: 'test-2',
+      type: 'essay',
+      question: 'Что значит фраза: "В ARRURRU невозможно просто отработать смену"? Объясните своими словами.',
+      required: true
+    },
+    {
+      id: 'test-3',
+      type: 'multiple',
+      question: 'Что формирует ощущение пространства для гостя? (Выберите все подходящие)',
+      options: [
+        'Состояние сотрудников',
+        'Дизайн интерьера',
+        'Внутреннее присутствие команды',
+        'Цена блюд',
+        'Поведение персонала'
+      ],
+      correctAnswer: [0, 2, 4],
+      required: true
+    },
+    {
+      id: 'test-4',
+      type: 'single',
+      question: 'Какая главная задача пространства ARRURRU?',
+      options: [
+        'Развлекать гостя',
+        'Убаюкать внутреннее напряжение',
+        'Удерживать постоянное внимание',
+        'Создать стерильную безопасную среду'
+      ],
+      correctAnswer: 1,
+      required: true
+    },
+    {
+      id: 'test-5',
+      type: 'text',
+      question: 'Почему в ARRURRU темнота не является проблемой?',
+      required: true
+    },
+    {
+      id: 'test-6',
+      type: 'essay',
+      question: 'Опишите, как вы понимаете принцип: "ARRURRU не требует понимания, он создаёт условия". Приведите пример.',
+      required: true
+    },
+    {
+      id: 'test-7',
+      type: 'multiple',
+      question: 'Что недопустимо в поведении сотрудника ARRURRU? (Выберите все)',
+      options: [
+        'Грубость и пренебрежение',
+        'Усталость после длинной смены',
+        'Демонстративное раздражение',
+        'Ирония за счёт гостя',
+        'Спокойная сдержанность',
+        'Резкие интонации'
+      ],
+      correctAnswer: [0, 2, 3, 5],
+      required: true
+    },
+    {
+      id: 'test-8',
+      type: 'text',
+      question: 'Почему в ARRURRU нельзя "спрятаться" за стандарты и скрипты?',
+      required: true
+    },
+    {
+      id: 'test-9',
+      type: 'single',
+      question: 'Что означает забота в понимании ARRURRU?',
+      options: [
+        'Постоянная активность и предложения',
+        'Внимательность — вовремя подойти или не подходить',
+        'Быстрое обслуживание',
+        'Заполнение всех пауз разговором'
+      ],
+      correctAnswer: 1,
+      required: true
+    },
+    {
+      id: 'test-10',
+      type: 'essay',
+      question: 'Представьте ситуацию: гость сидит молча, задумчиво смотрит в одну точку. Как вы поступите и почему?',
+      required: true
+    },
+    {
+      id: 'test-11',
+      type: 'multiple',
+      question: 'Что влияет на "общее поле" зала? (Выберите все)',
+      options: [
+        'Движения сотрудников',
+        'Погода на улице',
+        'Состояние каждого человека в команде',
+        'Звуки и паузы',
+        'Количество столов',
+        'Поведение одного человека'
+      ],
+      correctAnswer: [0, 2, 3, 5],
+      required: true
+    },
+    {
+      id: 'test-12',
+      type: 'text',
+      question: 'Почему суета недопустима в зале ARRURRU?',
+      required: true
+    },
+    {
+      id: 'test-13',
+      type: 'essay',
+      question: 'Вы пришли на смену в плохом настроении. Что это означает с точки зрения ответственности сотрудника ARRURRU? Как вы должны поступить?',
+      required: true
+    },
+    {
+      id: 'test-14',
+      type: 'single',
+      question: 'Что такое "роль" в контексте работы в ARRURRU?',
+      options: [
+        'Профессиональное поведение',
+        'Способ защититься и скрыть настоящее состояние',
+        'Соблюдение стандартов',
+        'Правила обслуживания'
+      ],
+      correctAnswer: 1,
+      required: true
+    },
+    {
+      id: 'test-15',
+      type: 'essay',
+      question: 'Что вы уносите из El Códice de ARRURRU? Что для вас было самым важным и почему?',
+      required: true
+    }
+  ];
+};
 
 export const getCodeiceContent = (): ContentPage[] => {
   return [
