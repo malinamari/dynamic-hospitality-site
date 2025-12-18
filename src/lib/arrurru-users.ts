@@ -31,6 +31,14 @@ export const initializeDemoData = () => {
 
   const demoUsers: UserWithPassword[] = [
     {
+      id: 'manager-main',
+      email: 'manager@arrurru.com',
+      fullName: 'Управляющий',
+      role: 'manager',
+      projectName: 'ARRURRU',
+      passwordHash: 'arrurru2024'
+    },
+    {
       id: 'user-1',
       email: 'anna@arrurru.com',
       fullName: 'Анна Смирнова',
