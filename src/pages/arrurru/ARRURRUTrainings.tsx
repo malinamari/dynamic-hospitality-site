@@ -21,10 +21,10 @@ const ARRURRUTrainings = () => {
     }
     const pages = getContentBySection('trainings');
     setContent(pages);
-    if (pages.length > 0) {
+    if (pages.length > 0 && !selectedPage) {
       setSelectedPage(pages[0]);
     }
-  }, [user, navigate]);
+  }, []);
 
   const handleLogout = () => {
     logout();
