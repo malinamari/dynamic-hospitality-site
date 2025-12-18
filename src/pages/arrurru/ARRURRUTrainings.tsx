@@ -79,14 +79,55 @@ const ARRURRUTrainings = () => {
               <CardContent className="p-6">
                 <div className="flex items-start gap-4">
                   <Icon name="Calendar" size={32} className="text-amber-400" />
-                  <div>
-                    <h2 className="text-xl font-bold text-white mb-2">Этапы работы</h2>
-                    <div className="space-y-2 text-sm text-slate-300">
-                      <p>🎯 <strong>Тренинг 1</strong> — Командообразующий (весь персонал, 1 неполный день)</p>
-                      <p>📋 <strong>2 дня</strong> — Анкетирование и интервью (доступно управляющему)</p>
-                      <p>🎓 <strong>Тренинг 2</strong> — Обучение зала</p>
-                      <p>🎓 <strong>Тренинг 3</strong> — Углублённая работа с залом</p>
-                      <p>✅ <strong>Итог</strong> — Встреча с управляющим и подведение итогов</p>
+                  <div className="flex-1">
+                    <h2 className="text-xl font-bold text-white mb-4">Этапы внедрения системы ARRURRU</h2>
+                    <div className="space-y-3">
+                      <div className="p-4 bg-slate-800/50 rounded-lg border border-amber-500/20">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-amber-500/20 text-amber-400 font-bold text-sm">1</div>
+                          <h3 className="font-bold text-white">Командообразование (2 дня)</h3>
+                        </div>
+                        <p className="text-sm text-slate-300 ml-11">Весь персонал — создание команды через игры, формирование ценностей, запуск ритуалов и геймификации. Лучше закрыть ресторан или провести в выходные.</p>
+                      </div>
+
+                      <div className="p-4 bg-slate-800/50 rounded-lg border border-blue-500/20">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm">2</div>
+                          <h3 className="font-bold text-white">Интервью и анкетирование (2 дня, 2 смены)</h3>
+                        </div>
+                        <p className="text-sm text-slate-300 ml-11">Индивидуальная работа с персоналом — опросы, выявление сильных и слабых сторон, оценка потенциала. Результаты в таблице для управляющего.</p>
+                      </div>
+
+                      <div className="p-4 bg-slate-800/50 rounded-lg border border-purple-500/20">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm">3</div>
+                          <h3 className="font-bold text-white">Профессиональный тренинг зала</h3>
+                        </div>
+                        <p className="text-sm text-slate-300 ml-11">Только персонал зала — базовые техники сервиса, знание меню, стандарты работы, коммуникация с гостями.</p>
+                      </div>
+
+                      <div className="p-4 bg-slate-800/50 rounded-lg border border-green-500/20">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-green-500/20 text-green-400 font-bold text-sm">4</div>
+                          <h3 className="font-bold text-white">Прикладной тренинг зала</h3>
+                        </div>
+                        <p className="text-sm text-slate-300 ml-11">Только персонал зала — углубленная практика, работа с конфликтами, сложные ситуации, допродажи и upsell.</p>
+                      </div>
+
+                      <div className="p-4 bg-slate-800/50 rounded-lg border border-orange-500/20">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-orange-500/20 text-orange-400 font-bold text-sm">5</div>
+                          <h3 className="font-bold text-white">Встреча с управляющим — подведение итогов</h3>
+                        </div>
+                        <p className="text-sm text-slate-300 ml-11">Финальная встреча — обсуждение результатов, разбор таблицы оценок персонала, рекомендации по дальнейшему развитию команды.</p>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 p-3 bg-amber-500/10 rounded-lg border border-amber-500/30">
+                      <p className="text-xs text-amber-200 flex items-start gap-2">
+                        <Icon name="Info" size={16} className="flex-shrink-0 mt-0.5" />
+                        <span>Программа каждого тренинга доступна для скачивания ниже. Все материалы адаптированы под философию ARRURRU.</span>
+                      </p>
                     </div>
                   </div>
                 </div>
