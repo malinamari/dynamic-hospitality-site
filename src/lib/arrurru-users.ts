@@ -26,7 +26,8 @@ export const getAllUsers = (): User[] => {
 
 export const initializeDemoData = () => {
   const existingUsers = getAllUsers();
-  if (existingUsers.length > 0) return;
+  const existingProgress = localStorage.getItem('arrurru_progress');
+  if (existingUsers.length > 0 && existingProgress) return;
 
   const demoUsers: UserWithPassword[] = [
     {
@@ -75,28 +76,25 @@ export const initializeDemoData = () => {
 
   const progressData = [
     { userId: 'user-1', contentId: '1', completed: true, examScore: 100, examAttempts: 1, completedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString() },
-    { userId: 'user-1', contentId: '2', completed: true, examScore: 85, examAttempts: 1, completedAt: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString() },
+    { userId: 'user-1', contentId: '2', completed: true, examScore: 95, examAttempts: 1, completedAt: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString() },
     { userId: 'user-1', contentId: '3', completed: true, examScore: 90, examAttempts: 1, completedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString() },
-    { userId: 'user-1', contentId: '4', completed: true, examScore: 95, examAttempts: 1, completedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString() },
+    { userId: 'user-1', contentId: '4', completed: true, examScore: 85, examAttempts: 1, completedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString() },
     
-    { userId: 'user-2', contentId: '1', completed: true, examScore: 75, examAttempts: 2, completedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString() },
+    { userId: 'user-2', contentId: '1', completed: true, examScore: 85, examAttempts: 2, completedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString() },
     { userId: 'user-2', contentId: '2', completed: true, examScore: 80, examAttempts: 1, completedAt: new Date(Date.now() - 9 * 24 * 60 * 60 * 1000).toISOString() },
-    { userId: 'user-2', contentId: '3', completed: false, examScore: 65, examAttempts: 1, lastAttemptDate: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString() },
     
     { userId: 'user-3', contentId: '1', completed: true, examScore: 100, examAttempts: 1, completedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString() },
-    { userId: 'user-3', contentId: '2', completed: true, examScore: 100, examAttempts: 1, completedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString() },
-    { userId: 'user-3', contentId: '3', completed: true, examScore: 95, examAttempts: 1, completedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString() },
-    { userId: 'user-3', contentId: '4', completed: true, examScore: 100, examAttempts: 1, completedAt: new Date().toISOString() },
-    { userId: 'user-3', contentId: '7', completed: true, examScore: 90, examAttempts: 1, completedAt: new Date().toISOString() },
+    { userId: 'user-3', contentId: '2', completed: true, examScore: 95, examAttempts: 1, completedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString() },
+    { userId: 'user-3', contentId: '3', completed: true, examScore: 90, examAttempts: 1, completedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString() },
+    { userId: 'user-3', contentId: '4', completed: true, examScore: 90, examAttempts: 1, completedAt: new Date().toISOString() },
+    { userId: 'user-3', contentId: '7', completed: true, examScore: 85, examAttempts: 1, completedAt: new Date().toISOString() },
     
-    { userId: 'user-4', contentId: '1', completed: true, examScore: 70, examAttempts: 3, completedAt: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000).toISOString() },
-    { userId: 'user-4', contentId: '2', completed: false, examScore: 60, examAttempts: 2, lastAttemptDate: new Date(Date.now() - 11 * 24 * 60 * 60 * 1000).toISOString() },
+    { userId: 'user-4', contentId: '1', completed: true, examScore: 80, examAttempts: 3, completedAt: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000).toISOString() },
+    { userId: 'user-4', contentId: '2', completed: true, examScore: 85, examAttempts: 2, completedAt: new Date(Date.now() - 11 * 24 * 60 * 60 * 1000).toISOString() },
+    { userId: 'user-4', contentId: '3', completed: true, examScore: 90, examAttempts: 1, completedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString() },
     
-    { userId: 'user-5', contentId: '1', completed: true, examScore: 85, examAttempts: 1, completedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString() },
-    { userId: 'user-5', contentId: '2', completed: true, examScore: 90, examAttempts: 1, completedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString() },
-    { userId: 'user-5', contentId: '3', completed: true, examScore: 80, examAttempts: 2, completedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString() },
-    { userId: 'user-5', contentId: '4', completed: true, examScore: 85, examAttempts: 1, completedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString() },
-    { userId: 'user-5', contentId: '7', completed: false, examScore: 65, examAttempts: 1, lastAttemptDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString() }
+    { userId: 'user-5', contentId: '1', completed: true, examScore: 90, examAttempts: 1, completedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString() },
+    { userId: 'user-5', contentId: '2', completed: true, examScore: 90, examAttempts: 1, completedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString() }
   ];
 
   localStorage.setItem('arrurru_progress', JSON.stringify(progressData));

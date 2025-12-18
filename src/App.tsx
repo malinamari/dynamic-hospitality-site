@@ -28,6 +28,7 @@ import ARRURRUTrainings from "./pages/arrurru/ARRURRUTrainings";
 import ARRURRUStandards from "./pages/arrurru/ARRURRUStandards";
 import ARRURRUAdmin from "./pages/arrurru/ARRURRUAdmin";
 import { initializeDemoData } from "./lib/arrurru-users";
+import "./lib/arrurru-reset";
 
 const queryClient = new QueryClient();
 

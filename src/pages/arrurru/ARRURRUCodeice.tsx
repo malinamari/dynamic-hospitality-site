@@ -23,9 +23,11 @@ const ARRURRUCodeice = () => {
       return;
     }
     const pages = getContentBySection('codice');
+    console.log('Loaded codice pages:', pages.length, pages);
     setContent(pages);
     if (pages.length > 0) {
       setSelectedPage(pages[0]);
+      console.log('Selected first page:', pages[0].title, pages[0].content.substring(0, 100));
     }
     if (user) {
       const progress = getUserProgress(user.id);
