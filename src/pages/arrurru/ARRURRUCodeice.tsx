@@ -7,7 +7,6 @@ import { getCurrentUser, logout } from '@/lib/arrurru-auth';
 import { getContentBySection, ContentPage, getUserProgress } from '@/lib/arrurru-content';
 import ReactMarkdown from 'react-markdown';
 import ExamComponent from '@/components/ExamComponent';
-import ImageGallery from '@/components/ImageGallery';
 
 const ARRURRUCodeice = () => {
   const navigate = useNavigate();
@@ -16,6 +15,7 @@ const ARRURRUCodeice = () => {
   const [selectedPage, setSelectedPage] = useState<ContentPage | null>(null);
   const [showExam, setShowExam] = useState(false);
   const [userProgress, setUserProgress] = useState<any[]>([]);
+  const [isLastPage, setIsLastPage] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -25,11 +25,10 @@ const ARRURRUCodeice = () => {
 
   useEffect(() => {
     const pages = getContentBySection('codice');
-    console.log('Loaded codice pages:', pages.length, pages);
     setContent(pages);
     if (pages.length > 0) {
       setSelectedPage(pages[0]);
-      console.log('Selected first page:', pages[0].title, pages[0].content.substring(0, 100));
+      setIsLastPage(false);
     }
   }, []);
 
@@ -39,6 +38,14 @@ const ARRURRUCodeice = () => {
       setUserProgress(progress);
     }
   }, [user]);
+
+  useEffect(() => {
+    if (selectedPage && content.length > 0) {
+      const currentIndex = content.findIndex(p => p.id === selectedPage.id);
+      setIsLastPage(currentIndex === content.length - 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [selectedPage, content]);
 
   const handleLogout = () => {
     logout();
@@ -112,9 +119,9 @@ const ARRURRUCodeice = () => {
                           }`}
                         >
                           <div className="flex items-center justify-between">
-                            <span>{page.title}</span>
+                            <span className="text-sm">{page.title}</span>
                             {isCompleted && (
-                              <Icon name="CheckCircle" size={18} className="text-green-400" />
+                              <Icon name="CheckCircle" size={18} className="text-green-400 flex-shrink-0" />
                             )}
                           </div>
                         </button>
@@ -128,26 +135,53 @@ const ARRURRUCodeice = () => {
             <main className="lg:col-span-3">
               {selectedPage ? (
                 <Card className="bg-slate-800/50 backdrop-blur-sm border-2 border-purple-500/30">
-                  <CardContent className="p-8 lg:p-12">
-                    <article className="prose prose-invert prose-lg prose-amber max-w-none">
+                  <CardContent className="p-8 lg:p-16">
+                    <article className="prose prose-invert max-w-none">
                       <ReactMarkdown 
                         components={{
-                          p: ({children}) => <p className="text-slate-200 leading-relaxed mb-6">{children}</p>,
-                          h1: ({children}) => <h1 className="text-3xl lg:text-4xl font-bold text-amber-400 mb-6">{children}</h1>,
-                          h2: ({children}) => <h2 className="text-2xl lg:text-3xl font-bold text-purple-300 mb-4 mt-8">{children}</h2>,
-                          h3: ({children}) => <h3 className="text-xl lg:text-2xl font-semibold text-purple-200 mb-3 mt-6">{children}</h3>,
-                          strong: ({children}) => <strong className="text-amber-300 font-semibold">{children}</strong>,
+                          p: ({children}) => <p className="text-slate-200 leading-loose mb-6 text-base lg:text-lg font-light">{children}</p>,
+                          h1: ({children}) => <h1 className="font-serif text-5xl lg:text-6xl font-bold text-amber-400 mb-8 tracking-tight">{children}</h1>,
+                          h2: ({children}) => <h2 className="font-serif text-3xl lg:text-4xl font-bold text-purple-300 mb-6 mt-12 tracking-tight">{children}</h2>,
+                          h3: ({children}) => <h3 className="text-2xl lg:text-3xl font-semibold text-amber-300 mb-4 mt-10">{children}</h3>,
+                          h4: ({children}) => <h4 className="text-xl lg:text-2xl font-semibold text-purple-200 mb-3 mt-8 italic">{children}</h4>,
+                          strong: ({children}) => <strong className="text-amber-300 font-bold">{children}</strong>,
+                          em: ({children}) => <em className="text-purple-300 font-medium not-italic">{children}</em>,
+                          blockquote: ({children}) => (
+                            <blockquote className="border-l-4 border-amber-500 pl-6 my-8 italic text-amber-200 text-lg lg:text-xl font-light">
+                              {children}
+                            </blockquote>
+                          ),
+                          ul: ({children}) => <ul className="space-y-3 my-6 list-none">{children}</ul>,
+                          li: ({children}) => (
+                            <li className="flex items-start gap-3 text-slate-200 text-base lg:text-lg">
+                              <span className="text-amber-500 mt-1">●</span>
+                              <span>{children}</span>
+                            </li>
+                          ),
+                          hr: () => <hr className="border-amber-500/30 my-12" />
                         }}
                       >
                         {selectedPage.content}
                       </ReactMarkdown>
                     </article>
 
-                    <ImageGallery files={selectedPage.files} />
+                    {selectedPage.files.filter(f => f.type === 'image').length > 0 && (
+                      <div className="mt-12 space-y-6">
+                        {selectedPage.files.filter(f => f.type === 'image').map((file, index) => (
+                          <div key={index} className="rounded-xl overflow-hidden border-2 border-amber-500/20">
+                            <img
+                              src={file.url}
+                              alt={file.name}
+                              className="w-full h-auto object-cover"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
 
                     {selectedPage.files.filter(f => f.type !== 'image').length > 0 && (
-                      <div className="mt-8 pt-8 border-t border-slate-700">
-                        <h3 className="text-lg font-bold text-white mb-4">Дополнительные материалы</h3>
+                      <div className="mt-12 pt-8 border-t border-slate-700">
+                        <h3 className="text-xl font-bold text-white mb-6">Дополнительные материалы</h3>
                         <div className="grid sm:grid-cols-2 gap-4">
                           {selectedPage.files.filter(f => f.type !== 'image').map((file, index) => (
                             <a
@@ -160,7 +194,6 @@ const ARRURRUCodeice = () => {
                               <Icon
                                 name={
                                   file.type === 'video' ? 'Video' :
-                                  file.type === 'image' ? 'Image' :
                                   file.type === 'link' ? 'Link' :
                                   'FileText'
                                 }
@@ -174,42 +207,7 @@ const ARRURRUCodeice = () => {
                       </div>
                     )}
 
-                    {selectedPage.hasExam && selectedPage.exam && (
-                      <div className="mt-8 pt-8 border-t border-slate-700">
-                        {!showExam ? (
-                          <div className="text-center">
-                            <h3 className="text-xl font-bold text-white mb-4">Экзамен по материалу</h3>
-                            <p className="text-slate-300 mb-6">
-                              Проверьте свои знания по этой главе
-                            </p>
-                            <Button
-                              onClick={() => setShowExam(true)}
-                              className="bg-amber-500 hover:bg-amber-600 text-white font-bold"
-                            >
-                              <Icon name="FileCheck" size={20} className="mr-2" />
-                              Пройти экзамен
-                            </Button>
-                          </div>
-                        ) : (
-                          <ExamComponent
-                            contentId={selectedPage.id}
-                            contentTitle={selectedPage.title}
-                            userId={user.id}
-                            userName={user.fullName}
-                            questions={selectedPage.exam}
-                            onComplete={(passed, score) => {
-                              const progress = getUserProgress(user.id);
-                              setUserProgress(progress);
-                              if (!passed) {
-                                setTimeout(() => setShowExam(false), 3000);
-                              }
-                            }}
-                          />
-                        )}
-                      </div>
-                    )}
-
-                    <div className="mt-8 pt-8 border-t border-slate-700">
+                    <div className="mt-12 pt-8 border-t border-slate-700">
                       <div className="flex justify-between items-center">
                         <Button
                           variant="outline"
@@ -218,7 +216,6 @@ const ARRURRUCodeice = () => {
                             if (currentIndex > 0) {
                               setSelectedPage(content[currentIndex - 1]);
                               setShowExam(false);
-                              window.scrollTo({ top: 0, behavior: 'smooth' });
                             }
                           }}
                           disabled={content.findIndex(p => p.id === selectedPage.id) === 0}
@@ -235,7 +232,6 @@ const ARRURRUCodeice = () => {
                             if (currentIndex < content.length - 1) {
                               setSelectedPage(content[currentIndex + 1]);
                               setShowExam(false);
-                              window.scrollTo({ top: 0, behavior: 'smooth' });
                             }
                           }}
                           disabled={content.findIndex(p => p.id === selectedPage.id) === content.length - 1}
@@ -246,6 +242,45 @@ const ARRURRUCodeice = () => {
                         </Button>
                       </div>
                     </div>
+
+                    {isLastPage && selectedPage.hasExam && selectedPage.exam && (
+                      <div className="mt-16 pt-12 border-t-2 border-amber-500/30">
+                        {!showExam ? (
+                          <div className="text-center bg-gradient-to-br from-amber-900/20 to-purple-900/20 rounded-2xl p-12 border-2 border-amber-500/30">
+                            <Icon name="Award" size={64} className="text-amber-400 mx-auto mb-6" />
+                            <h3 className="text-3xl font-bold text-white mb-4">Итоговый экзамен</h3>
+                            <p className="text-slate-300 mb-8 text-lg max-w-2xl mx-auto">
+                              Вы прошли все главы El Códice de ARRURRU. Теперь проверьте свои знания и получите сертификат о прохождении.
+                            </p>
+                            <Button
+                              onClick={() => setShowExam(true)}
+                              size="lg"
+                              className="bg-amber-500 hover:bg-amber-600 text-white font-bold text-lg px-8 py-6"
+                            >
+                              <Icon name="FileCheck" size={24} className="mr-3" />
+                              Начать итоговый экзамен
+                            </Button>
+                          </div>
+                        ) : (
+                          <div className="bg-slate-900/50 rounded-2xl p-8 border-2 border-purple-500/30">
+                            <ExamComponent
+                              contentId={selectedPage.id}
+                              contentTitle="Итоговый экзамен: El Códice de ARRURRU"
+                              userId={user.id}
+                              userName={user.fullName}
+                              questions={selectedPage.exam}
+                              onComplete={(passed, score) => {
+                                const progress = getUserProgress(user.id);
+                                setUserProgress(progress);
+                                if (!passed) {
+                                  setTimeout(() => setShowExam(false), 3000);
+                                }
+                              }}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               ) : (

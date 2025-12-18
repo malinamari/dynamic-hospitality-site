@@ -53,7 +53,7 @@ const STORAGE_KEY = 'arrurru_content';
 const PROGRESS_KEY = 'arrurru_progress';
 const EXAM_RESULTS_KEY = 'arrurru_exam_results';
 const CONTENT_VERSION_KEY = 'arrurru_content_version';
-const CURRENT_CONTENT_VERSION = '4.0';
+const CURRENT_CONTENT_VERSION = '5.0';
 
 const getInitialContent = (): ContentPage[] => {
   const codicePages = getCodeiceContent();
