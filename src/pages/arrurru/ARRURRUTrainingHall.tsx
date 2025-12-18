@@ -141,6 +141,7 @@ const ARRURRUTrainingHall = () => {
                           onClick={() => {
                             setSelectedPage(page);
                             setShowTest(false);
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
                           }}
                           className={`w-full text-left p-3 rounded-lg transition-colors ${
                             selectedPage?.id === page.id

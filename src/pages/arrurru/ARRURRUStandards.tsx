@@ -82,7 +82,10 @@ const ARRURRUStandards = () => {
                     {content.map((page) => (
                       <button
                         key={page.id}
-                        onClick={() => setSelectedPage(page)}
+                        onClick={() => {
+                          setSelectedPage(page);
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
                         className={`w-full text-left p-3 rounded-lg transition-colors ${
                           selectedPage?.id === page.id
                             ? 'bg-green-500/30 text-white'
