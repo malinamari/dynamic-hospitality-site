@@ -49,19 +49,22 @@ export interface ExamResult {
 
 import { getCodeiceContent } from './arrurru-codice-content';
 import { getAllTrainingHallContent } from './arrurru-training-hall-content';
+import { getTrainingsContent } from './arrurru-trainings-content';
 
 const STORAGE_KEY = 'arrurru_content';
 const PROGRESS_KEY = 'arrurru_progress';
 const EXAM_RESULTS_KEY = 'arrurru_exam_results';
 const CONTENT_VERSION_KEY = 'arrurru_content_version';
-const CURRENT_CONTENT_VERSION = '10.2';
+const CURRENT_CONTENT_VERSION = '10.3';
 
 const getInitialContent = (): ContentPage[] => {
   const codicePages = getCodeiceContent();
   const trainingHallPages = getAllTrainingHallContent();
+  const trainingsPages = getTrainingsContent();
   return [
     ...codicePages,
     ...trainingHallPages,
+    ...trainingsPages,
     {
       id: '4',
       section: 'training-hall',
