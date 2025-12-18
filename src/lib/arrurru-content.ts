@@ -53,7 +53,7 @@ const STORAGE_KEY = 'arrurru_content';
 const PROGRESS_KEY = 'arrurru_progress';
 const EXAM_RESULTS_KEY = 'arrurru_exam_results';
 const CONTENT_VERSION_KEY = 'arrurru_content_version';
-const CURRENT_CONTENT_VERSION = '2.0';
+const CURRENT_CONTENT_VERSION = '3.0';
 
 const getInitialContent = (): ContentPage[] => {
   const codicePages = getCodeiceContent();
@@ -1084,17 +1084,36 @@ const getInitialContent = (): ContentPage[] => {
 };
 
 export const loadContent = (): ContentPage[] => {
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored) {
-    try {
-      return JSON.parse(stored);
-    } catch {
-      return getInitialContent();
+  try {
+    const storedVersion = localStorage.getItem(CONTENT_VERSION_KEY);
+    
+    if (storedVersion !== CURRENT_CONTENT_VERSION) {
+      console.log('🔄 Content version mismatch, reloading...', { storedVersion, currentVersion: CURRENT_CONTENT_VERSION });
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.setItem(CONTENT_VERSION_KEY, CURRENT_CONTENT_VERSION);
+      
+      const initialContent = getInitialContent();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(initialContent));
+      console.log('✅ Content reloaded, pages count:', initialContent.length);
+      return initialContent;
     }
+    
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      const content = JSON.parse(stored);
+      console.log('📚 Loaded content from storage, pages count:', content.length);
+      return content;
+    }
+    
+    const initialContent = getInitialContent();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(initialContent));
+    localStorage.setItem(CONTENT_VERSION_KEY, CURRENT_CONTENT_VERSION);
+    console.log('✨ First time init, pages count:', initialContent.length);
+    return initialContent;
+  } catch (error) {
+    console.error('Error loading content:', error);
+    return getInitialContent();
   }
-  const initial = getInitialContent();
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(initial));
-  return initial;
 };
 
 export const getContentBySection = (section: string): ContentPage[] => {
