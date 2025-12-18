@@ -34,22 +34,20 @@ const ARRURRUTrainingHall = () => {
     }
   }, [user, navigate]);
 
-  useEffect(() => {
-    if (selectedProfession && selectedProfession !== lastProfessionRef.current) {
-      lastProfessionRef.current = selectedProfession;
+  const handleProfessionSelect = (professionId: string) => {
+    if (professionId !== lastProfessionRef.current) {
+      lastProfessionRef.current = professionId;
+      setSelectedProfession(professionId);
+      setShowCertificate(false);
+      
       const pages = getContentBySection('training-hall').filter(p => 
-        p.parentId === selectedProfession || p.id.startsWith(selectedProfession)
+        p.parentId === professionId || p.id.startsWith(professionId)
       );
       setContent(pages);
       if (pages.length > 0) {
         setSelectedPage(pages[0]);
       }
     }
-  }, [selectedProfession]);
-
-  const handleProfessionSelect = (professionId: string) => {
-    setSelectedProfession(professionId);
-    setShowCertificate(false);
   };
 
   const handleLogout = () => {
