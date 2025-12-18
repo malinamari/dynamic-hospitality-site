@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -21,6 +21,7 @@ const ARRURRUTrainingHall = () => {
   const [showTest, setShowTest] = useState(false);
   const [userProgress, setUserProgress] = useState<any[]>([]);
   const [showCertificate, setShowCertificate] = useState(false);
+  const lastProfessionRef = useRef<string>('');
 
   useEffect(() => {
     if (!user) {
@@ -34,7 +35,8 @@ const ARRURRUTrainingHall = () => {
   }, [user, navigate]);
 
   useEffect(() => {
-    if (selectedProfession) {
+    if (selectedProfession && selectedProfession !== lastProfessionRef.current) {
+      lastProfessionRef.current = selectedProfession;
       const pages = getContentBySection('training-hall').filter(p => 
         p.parentId === selectedProfession || p.id.startsWith(selectedProfession)
       );

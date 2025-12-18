@@ -44,7 +44,6 @@ const ARRURRUCodeice = () => {
     if (selectedPage && content.length > 0) {
       const currentIndex = content.findIndex(p => p.id === selectedPage.id);
       setIsLastPage(currentIndex === content.length - 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, [selectedPage, content]);
 
