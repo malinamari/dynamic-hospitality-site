@@ -20,8 +20,10 @@ const ARRURRUCodeice = () => {
   useEffect(() => {
     if (!user) {
       navigate('/arrurru/login');
-      return;
     }
+  }, [user, navigate]);
+
+  useEffect(() => {
     const pages = getContentBySection('codice');
     console.log('Loaded codice pages:', pages.length, pages);
     setContent(pages);
@@ -29,11 +31,14 @@ const ARRURRUCodeice = () => {
       setSelectedPage(pages[0]);
       console.log('Selected first page:', pages[0].title, pages[0].content.substring(0, 100));
     }
+  }, []);
+
+  useEffect(() => {
     if (user) {
       const progress = getUserProgress(user.id);
       setUserProgress(progress);
     }
-  }, [user, navigate]);
+  }, [user]);
 
   const handleLogout = () => {
     logout();
